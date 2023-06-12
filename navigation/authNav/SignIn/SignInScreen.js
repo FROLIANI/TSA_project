@@ -91,11 +91,7 @@ const SignIn = () => {
         setShowModal(true);
         setModalMessage("Login successful!");
         navigation.navigate('BottomOwner');
-        // if (user) {
-        //   const userId = user.uid;
-        //   fetchUserRole(userId);
-        // }
-
+    
     
       })
       .catch((error) => {

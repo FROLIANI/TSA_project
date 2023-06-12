@@ -1,11 +1,19 @@
-import React from 'react'
-import VendorAssignTaskScreen from './screens/VendorAssignTaskScreen'
-import OwnerCheckVerification from './screens/OwnerCheckVerification'
-import Confirm from './components/Confirm'
-import Reject from './components/Reject'
+
+import * as React from 'react';
+import AuthNav from './navigation/authNav';
 
 export default function App() {
   return (
-<OwnerCheckVerification/>
-  )
+    <>
+     <AuthNav />
+
+   </>
+  );
 }
+
+
+
+
+
+
+      

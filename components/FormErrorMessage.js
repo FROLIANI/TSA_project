@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-
 import { Colors } from '../config';
 
 export const FormErrorMessage = ({ error, visible }) => {

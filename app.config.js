@@ -8,16 +8,16 @@ export default {
     platforms: ['ios', 'android'],
     version: '0.15.0',
     orientation: 'portrait',
-    icon: './assets/flame.png',
-    splash: {
-      image: './assets/splash.png',
+    icon: './assets/Tsa.jpeg',
+    Tsa: {
+      image: './assets/Tsa.jpeg',
       resizeMode: 'cover',
       backgroundColor: '#F57C00'
     },
     updates: {
       fallbackToCacheTimeout: 0
     },
-    assetBundlePatterns: ['**/*'],
+    assetBundlePatterns: ['**/*'],  
     ios: {
       supportsTablet: true
     },

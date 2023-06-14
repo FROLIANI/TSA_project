@@ -1,8 +1,8 @@
 
 import { NavigationContainer } from '@react-navigation/native';
-import OwnerHomeScreen from '../../Screens/OwnerHomeScreen/OwnerHomeScreen'
-import OwnerRegVendorScreen from '../../Screens/OwnerRegVendorScreen/OwnerRegVendorScreen'
-import UpdateVendorScreen from '../../Screens/UpdateVendorScreen/UpdateVendorScreen'
+import VendorHomeScreen from '../../Screens/VendorHomeScreen/VendorHomeScreen'
+import VendorRegUserScreen from '../../Screens/VendorRegUserScreen/VendorRegUserScreen'
+import updateUserScreen from '../../Screens/updateUserScreen/updateUserScreen'
 
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,31 +12,24 @@ const Stack = createNativeStackNavigator();
 export default function AuthNav() {
   return (
     <Stack.Navigator
-      initialRouteName="OwnerHomeScreen"
+      initialRouteName="VendorHomeScreen"
       
     >
-      <Stack.Screen name="OwnerHomeScreen" component={OwnerHomeScreen}
+      <Stack.Screen name="VendorHomeScreen" component={VendorHomeScreen}
         options={{
           headerShown: false,
           headerStyle: { backgroundColor: 'blue' },
           headerTintColor: '#fff',
         }} />
 
-      <Stack.Screen name="OwnerRegVendorScreen" component={OwnerRegVendorScreen}
+      <Stack.Screen name="VendorRegUserScreen" component={VendorRegUserScreen}
         options={{
           headerShown: false,
           headerStyle: { backgroundColor: 'blue' },
           headerTintColor: '#fff',
         }} />
 
-<Stack.Screen name="OwnerRegVendorScreen" component={OwnerRegVendorScreen}
-        options={{
-          headerShown: false,
-          headerStyle: { backgroundColor: 'blue' },
-          headerTintColor: '#fff',
-        }} />
-
-<Stack.Screen name="UpdateVendorScreen" component={UpdateVendorScreen}
+<Stack.Screen name="updateUserScreen" component={updateUserScreen}
         options={{
           headerShown: false,
           headerStyle: { backgroundColor: 'blue' },

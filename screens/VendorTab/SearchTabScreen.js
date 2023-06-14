@@ -1,8 +1,8 @@
 
 import { NavigationContainer } from '@react-navigation/native';
-import OwnerHomeScreen from '../../Screens/OwnerHomeScreen/OwnerHomeScreen'
-import OwnerRegVendorScreen from '../../Screens/OwnerRegVendorScreen/OwnerRegVendorScreen'
-import UpdateVendorScreen from '../../Screens/UpdateVendorScreen/UpdateVendorScreen'
+import VendowPrevewTaskAssign from '../../Screens/VendowPrevewTaskAssign/VendowPrevewTaskAssign'
+import VendorManageTaskScreen from '../../Screens/VendorManageTaskScreen/VendorManageTaskScreen'
+import VendorViewUserDetails from '../../Screens/VendorViewUserDetails/VendorViewUserDetails'
 
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,31 +12,24 @@ const Stack = createNativeStackNavigator();
 export default function AuthNav() {
   return (
     <Stack.Navigator
-      initialRouteName="OwnerHomeScreen"
+      initialRouteName="VendowPrevewTaskAssign"
       
     >
-      <Stack.Screen name="OwnerHomeScreen" component={OwnerHomeScreen}
+      <Stack.Screen name="VendowPrevewTaskAssign" component={VendowPrevewTaskAssign}
         options={{
           headerShown: false,
           headerStyle: { backgroundColor: 'blue' },
           headerTintColor: '#fff',
         }} />
 
-      <Stack.Screen name="OwnerRegVendorScreen" component={OwnerRegVendorScreen}
+      <Stack.Screen name="VendorManageTaskScreen" component={VendorManageTaskScreen}
         options={{
           headerShown: false,
           headerStyle: { backgroundColor: 'blue' },
           headerTintColor: '#fff',
         }} />
 
-<Stack.Screen name="OwnerRegVendorScreen" component={OwnerRegVendorScreen}
-        options={{
-          headerShown: false,
-          headerStyle: { backgroundColor: 'blue' },
-          headerTintColor: '#fff',
-        }} />
-
-<Stack.Screen name="UpdateVendorScreen" component={UpdateVendorScreen}
+<Stack.Screen name="VendorViewUserDetails" component={VendorViewUserDetails}
         options={{
           headerShown: false,
           headerStyle: { backgroundColor: 'blue' },

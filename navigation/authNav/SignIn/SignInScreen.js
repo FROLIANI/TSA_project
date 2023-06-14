@@ -37,6 +37,16 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+
+
+  // Function to validate email format
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   useEffect(() => {
     const fetchUserRole = async (userId) => {
@@ -81,9 +91,30 @@ const SignIn = () => {
 
   const navigation = useNavigation();
 
-
-
   const handleSignIn = () => {
+
+    // Validate email if is empty
+    if (email.trim() === '') {
+      setEmailError("Email cannot be empty");
+      return;
+    }
+
+    // Validate email format
+    if (!validateEmail(email)) {
+      setEmailError("Invalid email format");
+      return;
+    }
+
+    // Validate password if empty
+    if (password.trim() === '') {
+      setPasswordError("Password cannot be empty");
+      return;
+    }
+
+    if (password.trim().length < 5) {
+      setPasswordError("Password must be at least 5 characters long");
+      return;
+    }
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Login successful
@@ -91,8 +122,8 @@ const SignIn = () => {
         setShowModal(true);
         setModalMessage("Login successful!");
         navigation.navigate('BottomOwner');
-    
-    
+
+
       })
       .catch((error) => {
         // Login failed
@@ -103,7 +134,7 @@ const SignIn = () => {
 
       });
   };
-  
+
 
   return <Center w="100%">
     <Box safeArea p="2" w="90%" maxW="290" py="8">
@@ -128,7 +159,8 @@ const SignIn = () => {
         TSA User Credentials Only!
       </Heading>
       <VStack space={3} mt="5">
-        <FormControl>
+
+        <FormControl isInvalid={emailError !== ""}>
           <FormControl.Label>Email</FormControl.Label>
           <Input
             onChangeText={(text) => setEmail(text)}
@@ -138,8 +170,13 @@ const SignIn = () => {
             }
 
           />
-        </FormControl>
-        <FormControl>
+          <FormControl.ErrorMessage>{emailError}</FormControl.ErrorMessage>
+        </FormControl >
+
+
+
+
+        <FormControl isInvalid={passwordError !== ""}>
           <FormControl.Label>Password</FormControl.Label>
           <Input secureTextEntry={true}
             onChangeText={(text) => setPassword(text)}
@@ -149,15 +186,30 @@ const SignIn = () => {
               <LeftIcon name="lock-closed" />
             }
           />
-
+          <FormControl.ErrorMessage>{passwordError}</FormControl.ErrorMessage>
         </FormControl>
-        <Button onPress={handleSignIn} bg="blue.600" mt="2">
+
+        <Button
+          onPress={handleSignIn}
+          bg="blue.600"
+          mt="2"
+          startIcon={<LeftIcon name="log-in" color="blue" />}
+          colorScheme="blue"
+        >
           LOGIN
         </Button>
+
       </VStack>
-      <Button onPress={() => { navigation.navigate('ForgotTab') }} bg="blue.600" mt="2">
+      <Button
+        onPress={() => navigation.navigate("ForgotTab")}
+        bg="blue.600"
+        mt="2"
+        startIcon={<LeftIcon name="lock-closed" color="white" />}
+        colorScheme="blue"
+      >
         RESET PASSWORD
       </Button>
+
     </Box>
 
     {/* Pop-up Modal */}

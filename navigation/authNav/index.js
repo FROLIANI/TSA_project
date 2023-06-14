@@ -14,10 +14,10 @@ export default function AuthNav() {
   return (
     <NavigationContainer>
       <Stack.Navigator   
-        initialRouteName="SignInScreen"
+        initialRouteName="BottomVendor"
       >
 
-        <Stack.Screen name="SignInScreen" component={SignInScreen}
+        <Stack.Screen name="BottomVendor" component={BottomVendor}
           options={{
             headerShown: false,
             headerStyle: { backgroundColor: 'blue' },
@@ -35,7 +35,7 @@ export default function AuthNav() {
             headerTintColor: '#fff',
           }} />
 
-        <Stack.Screen name="BottomVendor" component={BottomVendor}
+        {/* <Stack.Screen name="BottomVendor" component={BottomVendor}
           options={{
             headerShown: false,
             headerStyle: {
@@ -44,7 +44,7 @@ export default function AuthNav() {
             },
 
             headerTintColor: '#fff',
-          }} />
+          }} /> */}
 
         <Stack.Screen name="BottomUser" component={BottomUser}
           options={{

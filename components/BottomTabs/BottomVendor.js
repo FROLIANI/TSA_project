@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import HomeScreen from '../../Screens/HomeScreen/HomeScreen';
-import NotificationScreen from '../../Screens/NotificationScreen/NotificationScreen';
-import Profile from '../../Screens/Profile/Profile';
+import HomeTabScreen from '../../Screens/VendorTab/HomeTabScreen';
+import SearchTabScreen from '../../Screens/VendorTab/SearchTabScreen';
+import AccountTabScreen from '../../Screens/VendorTab/AccountTabScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -11,44 +11,44 @@ const Tab = createBottomTabNavigator();
 export default function BottomTab() {
   return (
     <Tab.Navigator
-      initialRouteName="HomeScreen"
-      screenOptions={{
-        tabBarActiveTintColor: 'blue',
+    initialRouteName="HomeTabScreen"
+    screenOptions={{
+      tabBarActiveTintColor: 'blue',
+    }}
+  >
+    <Tab.Screen
+      name="HomeTabScreen"
+      component={HomeTabScreen}
+      options={{
+          headerShown: false,
+        tabBarLabel: 'Home',
+        headerStyle: { backgroundColor: 'blue' },
+        headerTintColor: '#fff',
+        tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="home" color={color} size={size} />
+        ),
       }}
-    >
-      <Tab.Screen
-        name="HomeScreen"
-        component={HomeScreen}
+    />
+       <Tab.Screen
+        name="SearchTabScreen"
+        component={SearchTabScreen}
         options={{
-          tabBarLabel: 'HomeScreen',
-          headerTitle: 'TSA',
+            headerShown: false,
+          tabBarLabel: 'View',
           headerStyle: { backgroundColor: 'blue' },
           headerTintColor: '#fff',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
+            <MaterialCommunityIcons name="application-settings" color={color} size={size} />
           ),
         }}
       />
-      <Tab.Screen
-        name="NotificationScreen"
-        component={NotificationScreen}
-        options={{
-          tabBarLabel: 'Updates',
-          headerTitle: 'TSA',
 
-          headerStyle: { backgroundColor: 'blue' },
-          headerTintColor: '#fff',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="bell" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={Profile}
+<Tab.Screen
+        name="AccountTabScreen"
+        component={AccountTabScreen}
         options={{
-          tabBarLabel: 'Profile',
-          headerTitle: 'TSA',
+            headerShown: false,
+          tabBarLabel: 'View',
           headerStyle: { backgroundColor: 'blue' },
           headerTintColor: '#fff',
           tabBarIcon: ({ color, size }) => (

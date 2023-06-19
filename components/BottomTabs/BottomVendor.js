@@ -48,7 +48,7 @@ export default function BottomTab() {
         component={AccountTabScreen}
         options={{
             headerShown: false,
-          tabBarLabel: 'View',
+          tabBarLabel: 'Profile',
           headerStyle: { backgroundColor: 'blue' },
           headerTintColor: '#fff',
           tabBarIcon: ({ color, size }) => (

@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 import { Box, FlatList, Heading, HStack, VStack, Text, Spacer, Button, NativeBaseProvider } from "native-base";
 import { getDatabase, ref, onValue, remove } from 'firebase/database';
 import { View } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
 
 const database = getDatabase();
-
 const ManageUserTaskGiven = () => {
 
   const [users, setUsers] = useState([]);
@@ -30,6 +29,7 @@ const ManageUserTaskGiven = () => {
     setSelectedUser(user);
     // Perform the update logic here
     console.log('User update:', user);
+    navigation.navigate("VendorUpdateTaskScreen")
   };
 
   //Handle delete
@@ -43,6 +43,11 @@ const ManageUserTaskGiven = () => {
     }
   };
 
+  const navigation = useNavigation();
+  const handleBack = () => {
+    navigation.navigate('VendorAssignTaskScreen')
+  }
+
   return <Box>
     <Text style={{
       fontSize: 20, fontWeight: 'bold', textAlign: "center", marginVertical: 10,
@@ -51,14 +56,15 @@ const ManageUserTaskGiven = () => {
       Manage Task Assigned To worker
     </Text>
     <Text style={{ marginTop: 10, marginBottom: 10, fontSize: 18, fontWeight: 'bold', textAlign: "center" }}>
-      View Task For Action</Text>
+      View Task For Action
+    </Text>
+
     <Heading bg="teal.300" fontSize="md" p="2" pb="5">
       <HStack space={[12, 2]} justifyContent="space-between">
         <VStack><Text>Name</Text></VStack>
         <VStack><Text>Task</Text></VStack>
         <VStack><Text>Location</Text></VStack>
         <VStack><Text pl="6">Action</Text></VStack>
-
       </HStack>
     </Heading>
 
@@ -117,10 +123,9 @@ const ManageUserTaskGiven = () => {
       </View>
     )}
 
-
     <Button
-      style={{ marginBottom: 25 }}
-      onPress={() => console.log("Back button pressed")}
+      marginTop={5}
+      onPress={handleBack}
       colorScheme="blue"
       _text={{ color: "white" }}
     >

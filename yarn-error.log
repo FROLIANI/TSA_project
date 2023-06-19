@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\Frolian\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js install
+  C:\Program Files\nodejs\node.exe C:\Users\Frolian\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add react-native-elements
 
 PATH: 
   C:\Python311\Scripts\;C:\Python311\;C:\Program Files\Java\jdk-17\bin;C:\ProgramData\chocolatey\bin;C:\Users\Frolian\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files\Java\jdk-17\bin;C:\Users\Frolian\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Frolian\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\Frolian\AppData\Roaming\npm;C:\Users\Frolian\AppData\Roaming\npm\node_modules\expo-cli;
@@ -14,8 +14,8 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: getaddrinfo ENOTFOUND registry.yarnpkg.com
-      at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:107:26)
+  Error: connect EHOSTUNREACH 104.16.26.35:443
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1494:16)
 
 npm manifest: 
   {

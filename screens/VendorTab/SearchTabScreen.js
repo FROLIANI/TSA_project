@@ -1,9 +1,6 @@
-
-import { NavigationContainer } from '@react-navigation/native';
 import VendowPrevewTaskAssign from '../../Screens/VendowPrevewTaskAssign/VendowPrevewTaskAssign'
 import VendorManageTaskScreen from '../../Screens/VendorManageTaskScreen/VendorManageTaskScreen'
 import VendorViewUserDetails from '../../Screens/VendorViewUserDetails/VendorViewUserDetails'
-
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -13,7 +10,6 @@ export default function AuthNav() {
   return (
     <Stack.Navigator
       initialRouteName="VendowPrevewTaskAssign"
-      
     >
       <Stack.Screen name="VendowPrevewTaskAssign" component={VendowPrevewTaskAssign}
         options={{
@@ -29,7 +25,7 @@ export default function AuthNav() {
           headerTintColor: '#fff',
         }} />
 
-<Stack.Screen name="VendorViewUserDetails" component={VendorViewUserDetails}
+      <Stack.Screen name="VendorViewUserDetails" component={VendorViewUserDetails}
         options={{
           headerShown: false,
           headerStyle: { backgroundColor: 'blue' },

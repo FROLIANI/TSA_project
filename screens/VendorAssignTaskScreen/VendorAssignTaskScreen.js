@@ -1,12 +1,14 @@
 
 import React, { useState, useRef } from "react";
 import {
-  Input, Stack, Center, NativeBaseProvider, StatusBar, Box, HStack, IconButton, Icon, Text,
+  Input, Stack, NativeBaseProvider, StatusBar, Box, HStack, IconButton, Icon, Text,
   TextArea, Button
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
-import { StyleSheet } from 'react-native';
+import { StyleSheet,ScrollView,View } from 'react-native';
 import { getDatabase, ref, set, push } from "firebase/database";
+import { useNavigation } from '@react-navigation/native';
+
 
 const database = getDatabase();
 
@@ -79,12 +81,9 @@ const VendorAssignTask = () => {
       description,
       location,
       comment,
-
     };
 
-
     const usersRef = ref(database, 'TSA/TaskAssigned');
-
     // Insert user data into Firebase using push
     push(usersRef, user)
       .then(() => {
@@ -95,11 +94,17 @@ const VendorAssignTask = () => {
       });
   };
 
+  const navigation = useNavigation();
+  const handleManageTask = () => {
+  navigation.navigate("VendorManageTaskScreen")
+  }
 
-
-  return <Stack space={4} w="75%" maxW="300px" mx="auto">
+  return ( <ScrollView>
+    <View>
+     <Stack space={4} w="75%" maxW="300px" mx="auto">
     <StatusBar style={styles.bar} />
     <Box style={styles.boxbar} />
+
     <HStack style={styles.hstack} px="1" py="3"  >
       <HStack alignItems="center">
         <IconButton icon={<Icon size="sm" as={MaterialIcons} name="menu" color="white" />} />
@@ -154,6 +159,7 @@ const VendorAssignTask = () => {
     />
 
     <div style={styles.div}>
+
       <p style={styles.paragraph}>Admin Comment</p>
       <TextArea style={styles.box} placeholder="Important Instructions" w="100%" maxW="500"
         value={comment} onChangeText={(text) => setComment(text)}
@@ -164,15 +170,24 @@ const VendorAssignTask = () => {
         <Button size="md" onPress={resetData}>
           RESET
         </Button>
+
         <Button onPress={handleCreate} size="md" colorScheme="success">
           SUBMIT
         </Button>
       </div>
+
+      <Button onPress={handleManageTask} size="md" colorScheme="secondary" style={styles.ManageButton}>
+          MANAGE TASK HERE
+        </Button>
     </div>
-  </Stack>;
+  </Stack>
+  </View>
+  </ScrollView>
+  )
 };
 
 const styles = StyleSheet.create({
+
   bar: {
     backgroundColor: "##dbeafe",
     width: "100%",
@@ -214,7 +229,13 @@ const styles = StyleSheet.create({
     marginRight: 10,
     paddingTop: 10,
     justifyContent: 'space-between'
+  },
+
+  ManageButton:{
+    marginBottom:8,
+    marginTop:8
   }
+  
 })
 
 export default () => {

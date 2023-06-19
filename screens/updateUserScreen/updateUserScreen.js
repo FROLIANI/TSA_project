@@ -1,279 +1,142 @@
-import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, FlatList, StyleSheet, Text } from 'react-native';
-import { getDatabase, ref, onValue, update } from 'firebase/database';
-import { Input, Stack, NativeBaseProvider } from 'native-base'
+import React, { useEffect, useState } from 'react';
+import { Box, FlatList, Heading, HStack, VStack, Text, Spacer, Button, NativeBaseProvider } from "native-base";
+import { getDatabase, ref, onValue, remove } from 'firebase/database';
+import { View } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
 
 const database = getDatabase();
 
+const PreviewUser = () => {
 
-const UpdateUser = () => {
-  const [userData, setUserData] = useState([]);
-  const [updatedUserData, setUpdatedUserData] = useState([]);
+  //Handle navigation
+  const navigation = useNavigation();
+
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const fetchData = () => {
-      const dataRef = ref(database, 'TSA/worker');
-      onValue(dataRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          const userArray = Object.entries(data).map(([key, value]) => ({
-            id: key,
-            ...value,
-          }));
-          setUserData(userArray);
-          setUpdatedUserData(userArray);
-        } else {
-          setUserData([]);
-          setUpdatedUserData([]);
-        }
-      });
-    };
+    const usersRef = ref(database, 'TSA/Worker');
+    const unsubscribe = onValue(usersRef, (snapshot) => {
+      const data = snapshot.val();
+      const updatedUsers = data ? Object.entries(data).map(([id, user]) => ({ id, ...user })) : [];
+      setUsers(updatedUsers);
+    });
 
-    fetchData();
+    return () => {
+      remove(usersRef);
+      unsubscribe();
+    };
   }, []);
 
+  //Handle update
+  const handleUpdate = (userId) => {
+    const selectedUser = users.find(user => user.id === userId);
+    navigation.navigate("updateUserScreen", { user: selectedUser });
+  };
+
+  //Handle delete
+  const handleDelete = async (userId) => {
+    try {
+      const userRef = ref(database, `TSA/Worker/${userId}`);
+      await remove(userRef);
+      alert('User deleted successfully');
+    } catch (error) {
+      alert('Error deleting user:', error);
+    }
+  };
+
+  //Navigate to Vendor Home 
   const handleBack = () => {
-    // Handle the back button press here
-    console.log('Back button pressed');
+    navigation.navigate('VendorHomeScreen')
   };
 
-  const handleUpdate = (item) => {
-    const updatedData = {
-      name: item.name,
-      email: item.email,
-      phone: item.phone,
-      dob: item.dob,
-      gender: item.gender,
-      VendorType: item.VendorType,
-      registerdate: item.registerdate,
-      password: item.password,
-      cpassword: item.cpassword,
-    };
+  return <Box>
+    <Text style={{
+      fontSize: 20,
+      fontWeight: 'bold',
+      textAlign: "center",
+      marginVertical: 10,
+      backgroundColor: 'blue',
+      paddingTop: 10,
+      paddingBottom: 10
+    }}>
+      Vendor Preview User
+    </Text>
+    <Heading bg="teal.200" fontSize="md" p="5" pb="3">
+      <HStack space={[20, 1]} justifyContent="space-between">
+        <VStack><Text>Name</Text></VStack>
+        <VStack><Text>Email</Text></VStack>
+        <VStack><Text pl="6">Action</Text></VStack>
 
-    update(ref(database, `TSA/worker/${item.id}`), updatedData)
-      .then(() => {
-        alert('Data successfully updated');
-      })
-      .catch((error) => {
-        alert('Error updating data: ', error);
-      });
-  };
+      </HStack>
+    </Heading>
 
-  const renderItem = ({ item }) => (
-    <Stack space={4} w="75%" maxW="300px" mx="auto" mb={4}>
-      <Input size="xl"
-        placeholder='name'
-        value={item.name}
-        onChangeText={(text) => {
-          setUpdatedUserData((prevData) => {
-            const updatedItem = { ...item, name: text };
-            const newData = prevData.map((data) =>
-              data.id === item.id ? updatedItem : data
-            );
-            return newData;
-          });
-        }}
-      />
-      <Input size="xl"
-        placeholder='Email Address'
-        value={item.email}
-        onChangeText={(text) => {
-          setUpdatedUserData((prevData) => {
-            const updatedItem = { ...item, email: text };
-            const newData = prevData.map((data) =>
-              data.id === item.id ? updatedItem : data
-            );
-            return newData;
-          });
-        }}
-      />
+    <FlatList
+      data={users}
+      renderItem={({
+        item
+      }) => <Box borderBottomWidth="1" _dark={{
+        borderColor: "muted.50"
+      }} borderColor="muted.800"
+        pl={["0", "4"]}
+        pr={["0", "5"]} py="2"
+      >
+          <HStack p="3"
+            space={[1, 1]}
+            justifyContent="space-between"
+          >
+            <VStack>
+              <Text _dark={{
+                color: "warmGray.50"
+              }} color="coolGray.800" bold>
+                {item.name}
+              </Text>
+            </VStack>
+            <Spacer />
 
-      <Input size="xl"
-        placeholder='Phone Number'
-        value={item.phone}
-        onChangeText={(text) => {
-          setUpdatedUserData((prevData) => {
-            const updatedItem = { ...item, phone: text };
-            const newData = prevData.map((data) =>
-              data.id === item.id ? updatedItem : data
-            );
-            return newData;
-          });
-        }}
-      />
+            <VStack>
+              <Text _dark={{
+                color: "warmGray.50"
+              }} color="coolGray.800" bold>
+                {item.email}
+              </Text>
+            </VStack>
+            <Spacer />
 
-      <Input size="xl"
-        placeholder='Gender'
-        value={item.gender}
-        onChangeText={(text) => {
-          setUpdatedUserData((prevData) => {
-            const updatedItem = { ...item, gender: text };
-            const newData = prevData.map((data) =>
-              data.id === item.id ? updatedItem : data
-            );
-            return newData;
-          });
-        }}
-      />
+            <VStack>
+              <Button width={12} height={6} onPress={() => handleUpdate(item.id)}> update </Button>
+            </VStack>
 
-      <Input size="xl"
-        placeholder='Date of Birth'
-        value={item.dob}
-        onChangeText={(text) => {
-          setUpdatedUserData((prevData) => {
-            const updatedItem = { ...item, dob: text };
-            const newData = prevData.map((data) =>
-              data.id === item.id ? updatedItem : data
-            );
-            return newData;
-          });
-        }}
-      />
+            <VStack>
+              <Button width={12} height={6} backgroundColor={'red.700'} onPress={() => handleDelete(item.id)}> Delete </Button>
+            </VStack>
+          </HStack>
+        </Box>
+      }
 
-      <Input size="xl"
-        placeholder='Vendor Type'
-        value={item.VendorType}
-        onChangeText={(text) => {
-          setUpdatedUserData((prevData) => {
-            const updatedItem = { ...item, VendorType: text };
-            const newData = prevData.map((data) =>
-              data.id === item.id ? updatedItem : data
-            );
-            return newData;
-          });
-        }}
-      />
+      //Provide a unique key for each item
+      keyExtractor={item => item.id.toString()} />
+    <View style={{ marginBottom: 20 }}>
+      <Box p={3} >
+        <Button
+          width={'80%'}
+          height={30}
+          alignSelf={'center'}
+          padding={5}
+          marginBottom={20}
+          onPress={handleBack}
+        >
+          BACK
+        </Button>
+      </Box>
+    </View >
 
-      <Input size="xl"
-        placeholder='Registerd Date'
-        value={item.registerdate}
-        onChangeText={(text) => {
-          setUpdatedUserData((prevData) => {
-            const updatedItem = { ...item, registerdate: text };
-            const newData = prevData.map((data) =>
-              data.id === item.id ? updatedItem : data
-            );
-            return newData;
-          });
-        }}
-      />
-
-      <Input size="xl"
-        placeholder='Password'
-        value={item.password}
-        onChangeText={(text) => {
-          setUpdatedUserData((prevData) => {
-            const updatedItem = { ...item, password: text };
-            const newData = prevData.map((data) =>
-              data.id === item.id ? updatedItem : data
-            );
-            return newData;
-          });
-        }}
-      />
-
-      <Input size="xl"
-        placeholder='Confirm password'
-        value={item.cpassword}
-        onChangeText={(text) => {
-          setUpdatedUserData((prevData) => {
-            const updatedItem = { ...item, cpassword: text };
-            const newData = prevData.map((data) =>
-              data.id === item.id ? updatedItem : data
-            );
-            return newData;
-          });
-        }}
-      />
-    </Stack>
-  );
-
-  const renderFooter = () => (
-    <View style={styles.footer}>
-      <View style={styles.buttonContainer}>
-
-        {/* Button for back */}
-       <Button 
-        color="blue"
-        title="Back"
-        onPress={handleBack}
-        style={styles.button}
-        />
-
-         {/* Button for Update */}
-      <Button
-        paddingBottom={5}
-        color={'green'}
-        title="Update"
-        onPress={() => {
-          updatedUserData.forEach((item) => handleUpdate(item));
-        }}
-        style={styles.button}
-      />
-      </View>
-    </View>
-  );
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.headerText}>Update User Details</Text>
-      <FlatList
-        data={updatedUserData}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        ListFooterComponent={renderFooter}
-        style={styles.list}
-      />
-    </View>
-  );
-}
+  </Box>;
+};
 
 export default () => {
   return (
     <NativeBaseProvider>
-      <UpdateUser />
+      <PreviewUser />
     </NativeBaseProvider>
-  )
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: 30
-  },
-  list: {
-    flex: 1,
-  },
-  itemContainer: {
-    marginBottom: 10,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-  footer: {
-    marginTop: 10,
-    width: '80%',
-    alignSelf: 'center',
-  },
-
-
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    backgroundColor: 'blue',
-    paddingTop: 10,
-    paddingBottom: 10
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 30,
-
-  },
-});
+  );
+};

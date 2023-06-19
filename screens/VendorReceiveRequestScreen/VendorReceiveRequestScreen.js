@@ -1,14 +1,13 @@
-
-
 import React, { useEffect, useState } from 'react';
 import { Box, FlatList, Heading, HStack, VStack, Text, Spacer, Button, NativeBaseProvider } from "native-base";
 import { getDatabase, ref, onValue, update, set } from 'firebase/database';
-import { View,StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
+
 
 const database = getDatabase();
 
 const VendorConfirmUserDetails = () => {
-
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -26,7 +25,6 @@ const VendorConfirmUserDetails = () => {
       if (data && data.userId) {
         setUserId(data.userId);
       }
-
       const updatedUsers = data ? Object.entries(data).map(([id, user]) => ({ id, ...user })) : [];
       setUsers(updatedUsers);
     });
@@ -69,12 +67,18 @@ const VendorConfirmUserDetails = () => {
     }
   }
 
+  //Handle to navigate back to home
+  const navigation = useNavigation();
+  const HandleBackButton = () => {
+    navigation.navigate("VendorHomeScreen")
+  }
 
   return <Box>
-   <View style={styles.titleContainer}>
+    <View style={styles.titleContainer}>
       <div style={styles.heading}>Request Fowarded Approvement</div>
       <Text style={styles.titleText}> Approval User Request</Text>
     </View>
+
     <Heading bg="teal.200" fontSize="md" p="5" pb="3">
       <HStack space={[5, 1]} justifyContent="space-between">
         <VStack><Text>Date</Text></VStack>
@@ -82,7 +86,6 @@ const VendorConfirmUserDetails = () => {
         <VStack><Text>Vendor</Text></VStack>
         <VStack><Text>Reason</Text></VStack>
         <VStack><Text pl="6">Action</Text></VStack>
-
       </HStack>
     </Heading>
 
@@ -146,6 +149,18 @@ const VendorConfirmUserDetails = () => {
       }
       //Provide a unique key for each item
       keyExtractor={item => item.id.toString()} />
+
+    <View  >
+      <Button onPress={HandleBackButton}
+        backgroundColor={'blue.600'}
+        color="white"
+        marginTop={4}
+        alignSelf={'center'}
+        width={'50%'}>
+        BACK
+      </Button>
+    </View>
+
     {selectedUser && (
       <View>
         <Text>Selected User: {selectedUser.name}</Text>
@@ -162,6 +177,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingTop: 10
   },
+
   heading: {
     fontFamily: 'sans-serif',
     fontStyle: 'italic',
@@ -173,6 +189,7 @@ const styles = StyleSheet.create({
     paddingTop: 18,
     shapeMargin: 'corner'
   }
+
 });
 
 export default () => {

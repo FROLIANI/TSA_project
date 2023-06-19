@@ -12,6 +12,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View, TouchableOpacity, Alert } from "react-native";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
+import { useNavigation } from '@react-navigation/native';
 
 function AppBar() {
     return (

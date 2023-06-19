@@ -1,9 +1,7 @@
-
-
 import React, { useEffect, useState } from "react";
 import { getDatabase, ref, onValue, update } from "firebase/database";
 import { View, Text, StyleSheet, FlatList, Button } from "react-native";
-
+import { useNavigation } from '@react-navigation/native';
 
 const database = getDatabase();
 
@@ -39,16 +37,26 @@ const RecieveTaskAssigned = () => {
         </View>
     );
 
+    const navigation = useNavigation();
     const handleBackButton = () => {
-        console.log('Navigate back');
-        // Add your navigation logic here
+        navigation.navigate('VendorHomeScreen')
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#f5f5f5', paddingTop: 20 }}>
+        <View style={{
+            flex: 1,
+            backgroundColor: '#f5f5f5',
+            paddingTop: 20
+        }}
+        >
             <Text style={{
-                fontSize: 20, fontWeight: 'bold', textAlign: "center", marginVertical: 10,
-                backgroundColor: 'grey', paddingTop: 10, paddingBottom: 10
+                fontSize: 20,
+                fontWeight: 'bold',
+                textAlign: "center",
+                marginVertical: 10,
+                backgroundColor: 'grey',
+                paddingTop: 10,
+                paddingBottom: 10
             }}>
                 Vendor Preview Task Assign
             </Text>
@@ -59,10 +67,17 @@ const RecieveTaskAssigned = () => {
                 keyExtractor={(item, index) => index.toString()}
                 contentContainerStyle={{ alignItems: "center" }} // Center vertically
             />
-            <View style={{ marginBottom: 20, backgroundColor: 'green' }}>
-                <Button title="Back" onPress={handleBackButton} color="blue" />
+            <View
+                style={{
+                    marginBottom: 20,
+                    width: '50%',
+                    alignSelf: 'center'
+                }}>
+                <Button title="Back"
+                    onPress={handleBackButton}
+                    color="blue"
+                />
             </View>
-
         </View>
     );
 };
@@ -83,11 +98,11 @@ const styles = StyleSheet.create({
     itemContainer: {
         marginBottom: 10,
         backgroundColor: "#eaeaea",
-
         padding: 20,
         borderRadius: 5,
         alignItems: "flex-start", // Center horizontally
     },
+
     itemText: {
         fontSize: 16,
         fontWeight: "bold",

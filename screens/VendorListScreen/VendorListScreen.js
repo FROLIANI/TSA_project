@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, FlatList, Heading, HStack, VStack, Text, Spacer, Button, NativeBaseProvider } from "native-base";
 import { getDatabase, ref, onValue, update, remove, set } from 'firebase/database';
 import { View, StyleSheet, ScrollView } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
 
 const database = getDatabase();
 
@@ -55,12 +56,13 @@ const VendorList = () => {
         }
     };
 
-   
+    const navigation = useNavigation();
+
     //Handle update
     const handleUpdate = (user) => {
         setSelectedUser(user);
         // Perform the update logic here
-        console.log('User update:', user);
+        navigation.navigate("UpdateVendorScreen")
     };
 
     const handleDelete = async (userId) => {

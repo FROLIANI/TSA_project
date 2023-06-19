@@ -1,22 +1,20 @@
-
-import { NavigationContainer } from '@react-navigation/native';
-import ResetPasswordScreen from '../../Screens/ResetPasswordScreen/ResetPasswordScreen'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SettingForgotScreen from '../../Screens/ForgotTab/ForgotScreens/SettingForgotScreen'
 
-const Stack = createNativeStackNavigator(); 
+const Stack = createNativeStackNavigator();
 
 export default function AuthNav() {
   return (
-      <Stack.Navigator
-        initialRouteName="ResetPasswordScreen"
-      >
-        <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen}
-          options={{
-            headerShown: false,
-            headerStyle: { backgroundColor: 'blue' },
-            headerTintColor: '#fff',
-          }} />
+    <Stack.Navigator
+      initialRouteName="SettingForgotScreen"
+    >
+      <Stack.Screen name="SettingForgotScreen" component={SettingForgotScreen}
+        options={{
+          headerShown: false,
+          headerStyle: { backgroundColor: 'blue' },
+          headerTintColor: '#fff',
+        }} />
 
-      </Stack.Navigator>
+    </Stack.Navigator>
   );
 };

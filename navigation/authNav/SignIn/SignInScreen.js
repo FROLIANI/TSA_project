@@ -5,11 +5,11 @@ import {
 } from "native-base";
 import { useNavigation } from '@react-navigation/native';
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { Ionicons } from '@expo/vector-icons';
 import { Image, Text } from "react-native";
+import { getDatabase, ref, set, get } from "firebase/database";
 
-import { getUserRole } from '../../../Providers/FirebaseService';
 import { UserContext } from '../../../Providers/UserContext';
 
 //Firebase Configuration
@@ -24,9 +24,8 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-// Create a reference to the database
 const auth = getAuth(app);
-
+const database = getDatabase(app);
 
 const SignIn = () => {
   //const userId = route.params.userId;
@@ -41,6 +40,10 @@ const SignIn = () => {
   const [passwordError, setPasswordError] = useState("");
 
 
+  const emailString = email.toString().trim();
+  const passwordString = password.toString().trim();
+
+  const userRoleContext = useContext(UserContext);
 
   // Function to validate email format
   const validateEmail = (email) => {
@@ -48,26 +51,6 @@ const SignIn = () => {
     return emailRegex.test(email);
   };
 
-  useEffect(() => {
-    const fetchUserRole = async (userId) => {
-      try {
-        const userType = await getUserRole(userId);
-        setIsLoading(false);
-
-        if (userType === 'admin') {
-          navigation.navigate('BottomOwner');
-        } else if (userType === 'vendor') {
-          navigation.navigate('BottomOwner');
-        } else if (userType === 'HttOwner') {
-          navigation.navigate('BottomOwner');
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchUserRole();
-  }, []);
 
   useEffect(() => {
     let timer;
@@ -91,50 +74,74 @@ const SignIn = () => {
 
   const navigation = useNavigation();
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
 
     // Validate email if is empty
-    if (email.trim() === '') {
+    if (emailString === '') {
       setEmailError("Email cannot be empty");
       return;
     }
 
     // Validate email format
-    if (!validateEmail(email)) {
+    if (!validateEmail(emailString)) {
       setEmailError("Invalid email format");
       return;
     }
 
     // Validate password if empty
-    if (password.trim() === '') {
+    if (passwordString === '') {
       setPasswordError("Password cannot be empty");
       return;
     }
 
-    if (password.trim().length < 5) {
+    if (passwordString.length < 5) {
       setPasswordError("Password must be at least 5 characters long");
       return;
     }
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Login successful
-        const user = userCredential.user;
-        setShowModal(true);
-        setModalMessage("Login successful!");
-        navigation.navigate('BottomOwner');
 
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, emailString, passwordString);
+      const user = userCredential.user;
+      // You can fetch additional user data from the Realtime Database based on the user's ID
+      const snapshot = await get(ref(database, `users/${user.uid}`));
+      const userData = snapshot.val();
+      if (userData) {
+        const userRole = userData.role;
+        // fetchDataBasedOnRole(userRole);
 
-      })
-      .catch((error) => {
-        // Login failed
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        setShowModal(true);
-        setModalMessage("Wrong email or password. Please try again.");
+        // Update the userRole in the UserContext
+        userRoleContext.setUserRole(userRole);
 
-      });
+        //  Check user role and navigate to the respective page
+        if (userRole === 'Admin') {
+          setIsLoading(false);
+          setShowModal(true);
+          setModalMessage("Login successful!");
+          navigation.navigate('BottomOwner');
+
+        } else if (userRole === 'Vendor') {
+          setIsLoading(false);
+          setShowModal(true);
+          setModalMessage("Login successful!");
+          navigation.navigate('BottomVendor');
+
+        } else if (userRole === 'Worker') {
+          navigation.navigate('BottomUser');
+          setIsLoading(false);
+          setShowModal(true);
+          setModalMessage("Login successful!");
+        }
+        else {
+          setShowModal(true);
+          setModalMessage("User data not found. Please try again.");
+        }
+      }
+    } catch (error) {
+      setShowModal(true);
+      setModalMessage("Wrong email or password. Please try again.");
+      console.log(error);
+    }
   };
-
 
   return <Center w="100%">
     <Box safeArea p="2" w="90%" maxW="290" py="8">
@@ -148,6 +155,7 @@ const SignIn = () => {
             borderRadius: 10,
           }
         } />
+
       <Heading size="lg" color="coolBlack.800" _dark={{
         color: "warmBlack.50"
       }} fontWeight="semibold">
@@ -168,13 +176,9 @@ const SignIn = () => {
             InputLeftElement={
               <LeftIcon name="mail" />
             }
-
           />
           <FormControl.ErrorMessage>{emailError}</FormControl.ErrorMessage>
         </FormControl >
-
-
-
 
         <FormControl isInvalid={passwordError !== ""}>
           <FormControl.Label>Password</FormControl.Label>

@@ -1,7 +1,7 @@
 import VendorAssignTaskScreen from '../../Screens/VendorAssignTaskScreen/VendorAssignTaskScreen'
 import VendorReceiveRequestScreen from '../../Screens/VendorReceiveRequestScreen/VendorReceiveRequestScreen'
 import VendorUpdateTaskScreen from '../../Screens/VendorUpdateTaskScreen/VendorUpdateTaskScreen'
-
+import VendorPreviewUserScreen from '../../Screens/VendorPreviewUserScreen/VendorPreviewUserScreen'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -11,7 +11,6 @@ export default function AuthNav() {
   return (
     <Stack.Navigator
       initialRouteName="VendorReceiveRequestScreen"
-      
     >
       <Stack.Screen name="VendorReceiveRequestScreen" component={VendorReceiveRequestScreen}
         options={{
@@ -27,7 +26,14 @@ export default function AuthNav() {
           headerTintColor: '#fff',
         }} />
 
-<Stack.Screen name="VendorUpdateTaskScreen" component={VendorUpdateTaskScreen}
+      <Stack.Screen name="VendorUpdateTaskScreen" component={VendorUpdateTaskScreen}
+        options={{
+          headerShown: false,
+          headerStyle: { backgroundColor: 'blue' },
+          headerTintColor: '#fff',
+        }} />
+
+      <Stack.Screen name="VendorPreviewUserScreen" component={VendorPreviewUserScreen}
         options={{
           headerShown: false,
           headerStyle: { backgroundColor: 'blue' },

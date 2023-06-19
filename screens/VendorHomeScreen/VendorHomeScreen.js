@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { Text, View, StyleSheet, Button, SafeAreaView, Alert } from 'react-native';
 import { Menu, HamburgerIcon, Box, Pressable, NativeBaseProvider } from "native-base";
@@ -16,10 +15,9 @@ function VendorHomeScreen() {
     }}>
       <Menu.Item>Home</Menu.Item>
       <Menu.Item>About</Menu.Item>
+      <Menu.Item>LogOut</Menu.Item>
     </Menu>
   </Box>;
-
-
 }
 
 const Separator = () => (
@@ -27,40 +25,40 @@ const Separator = () => (
 );
 
 const MyButton = () => {
-
   const navigation = useNavigation();
-
-  return(<SafeAreaView style={styles.container1}>
+  return (<SafeAreaView style={styles.container1}>
     <View>
       <Button
         title="NEW USER?  ADD"
         color="green"
-        onPress={() => { navigation.navigate('Vendor Register User') }}
+        onPress={() => { navigation.navigate('VendorRegUserScreen') }}
       />
     </View>
     <Separator />
+
     <View>
       <Button
-        title="FEEDBACK NOTIFICATION"
-        color="yellow"
-        onPress={() => { navigation.navigate('Reset Password') }}
+        title="MANAGE VIEW USER DETAILS"
+        color="grey"
+        onPress={() => { navigation.navigate('VendorPreviewUserScreen') }}
       />
     </View>
     <Separator />
+
     <View>
       <Button
         title="REQUEST FOWARDED REVIEW"
         color="darkblue"
-        onPress={() => { navigation.navigate('Vendor Receive Request') }}
+        onPress={() => { navigation.navigate('VendorReceiveRequestScreen') }}
       />
     </View>
-
     <Separator />
+
     <View>
       <Button
         title="TASK ASSIGN HERE"
         color="purple"
-        onPress={() => { navigation.navigate('Vendor Assign Task') }}
+        onPress={() => { navigation.navigate('VendorAssignTaskScreen') }}
       />
     </View>
   </SafeAreaView>
@@ -78,7 +76,6 @@ const styles = StyleSheet.create({
     maxWidth: '100%'
   },
 
-
   description: {
     color: 'white',
     marginTop: 5,
@@ -89,32 +86,35 @@ const styles = StyleSheet.create({
 
   Mymenu: {
     fontSize: '30',
-    alignItems: 'flex-end'
+    alignItems: 'flex-start'
   },
 
   borderlessButtonContainer: {
     padding: '20',
   },
 
-
   container1: {
     flex: 1,
     justifyContent: 'center',
     marginHorizontal: 10,
   },
+
   title: {
     textAlign: 'center',
     marginVertical: 8,
   },
+
   fixToText: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+
   separator: {
     marginVertical: 8,
     borderBottomColor: '#737373',
     borderColor: 'none'
   },
+
 });
 
 export default () => {
@@ -123,8 +123,6 @@ export default () => {
       <VendorHomeScreen />
       <MyButton />
     </NativeBaseProvider>
-
-
   )
 };
 

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { getDatabase, ref, onValue,update } from "firebase/database";
-import { View, Text, StyleSheet, FlatList ,Button } from "react-native";
+import { getDatabase, ref, onValue, update } from "firebase/database";
+import { View, Text, StyleSheet, FlatList, Button } from "react-native";
+import { useNavigation } from '@react-navigation/native';
+
 
 const database = getDatabase();
 
@@ -36,9 +38,11 @@ const RecieveTaskAssigned = () => {
     </View>
   );
 
+  const navigation = useNavigation();
+
   const handleBackButton = () => {
-    console.log('Navigate back');
-    // Add your navigation logic here
+    navigation.navigate("UserHomeScreen")
+
   };
 
   return (
@@ -47,7 +51,7 @@ const RecieveTaskAssigned = () => {
         fontSize: 20, fontWeight: 'bold', textAlign: "center", marginVertical: 10,
         backgroundColor: 'grey', paddingTop: 10, paddingBottom: 10
       }}>
-    Here Your Task Assign
+        Here Your Task Assigned
       </Text>
 
       <FlatList
@@ -56,7 +60,7 @@ const RecieveTaskAssigned = () => {
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{ alignItems: "center" }} // Center vertically
       />
-    <View style={{ marginBottom: 20, backgroundColor: 'green' }}>
+      <View style={{ marginBottom: 20, backgroundColor: 'green' }}>
         <Button title="Back" onPress={handleBackButton} color="blue" />
       </View>
 

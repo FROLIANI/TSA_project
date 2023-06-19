@@ -29,13 +29,6 @@ export default function AuthNav() {
           headerTintColor: '#fff',
         }} />
 
-<Stack.Screen name="OwnerRegVendorScreen" component={OwnerRegVendorScreen}
-        options={{
-          headerShown: false,
-          headerStyle: { backgroundColor: 'blue' },
-          headerTintColor: '#fff',
-        }} />
-
 <Stack.Screen name="UpdateVendorScreen" component={UpdateVendorScreen}
         options={{
           headerShown: false,

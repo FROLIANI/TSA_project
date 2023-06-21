@@ -29,6 +29,11 @@ const MyButton = () => {
 
   return (
     <SafeAreaView style={styles.container1}>
+       <View style={styles.longTextContainer}>
+      <Text style={styles.longText}>
+          You are Warmly Encouraged feel free to perform your Activities as Appropriately
+        </Text>
+        </View>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>TSA</Text>
       </View>
@@ -47,7 +52,7 @@ const MyButton = () => {
       <View>
         <Button
           title="FEEDBACK NOTIFICATION"
-          color="#f194ff"
+          color="#38bdf8"
           onPress={() => { navigation.navigate('UserReceiveFeedbackScreen') }}
         />
       </View>
@@ -55,12 +60,20 @@ const MyButton = () => {
       <View>
         <Button
           title="REQUEST HISTORY"
-          color="darkgreen"
+          color="#a855f7"
           onPress={() => { navigation.navigate('UserSendRequestScreen') }}
         />
       </View>
     </SafeAreaView>
   )
+};
+
+const Footer = () => {
+  return (
+    <View style={styles.footer}>
+      <Text style={styles.footerText}>By Accepting Terms and Condition</Text>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -89,6 +102,22 @@ const styles = StyleSheet.create({
 
   borderlessButtonContainer: {
     padding: '20',
+  },
+
+  longTextContainer: {
+    backgroundColor: '#f0fdf4',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+  },
+
+  longText: {
+    marginVertical: 1,
+    fontSize: 18,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginTop: 3,
+    marginBottom: 10,
   },
 
   container1: {
@@ -137,6 +166,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
+  footer: {
+    backgroundColor: '#22d3ee',
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+  },
+  footerText: {
+    fontSize: 16,
+  },
+
 });
 
 export default () => {
@@ -144,6 +183,7 @@ export default () => {
     <NativeBaseProvider>
       <OwnerHomeScreen />
       <MyButton />
+      <Footer />
     </NativeBaseProvider>
 
 

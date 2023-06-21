@@ -4,6 +4,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View, Text, ScrollView } from "react-native";
 import { getDatabase, ref, push, set } from 'firebase/database';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
+
 
 
 const database = getDatabase();
@@ -102,11 +104,17 @@ const HttRegisterVendor = () => {
           .catch((error) => {
             alert('Error inserting data into Realtime Database: ' + error.message);
           });
-      })       
+      })
       .catch((error) => {
         alert('Error registering user: ' + error.message);
       });
   };
+
+  const navigation = useNavigation();
+  const handleBack = () => {
+    navigation.navigate("OwnerHomeScreen")
+  };
+
   return (<View style={styles.container}>
     <Text style={styles.heading}> Htt Register Vendor</Text>
     <View style={styles.titleContainer}>
@@ -233,11 +241,12 @@ const HttRegisterVendor = () => {
           <Text style={styles.errorText}></Text>
         )}
 
-
         <Button style={styles.button} onPress={handleCreate}>
           <Text style={styles.buttonText}>SAVE</Text>
-        </Button>
 
+        </Button > <Pressable onPress={handleBack} style={styles.backButton}>
+          <Text  style={styles.backButtonText} >BACK HOME</Text>
+        </Pressable>
       </Stack>
     </ScrollView>
   </View>
@@ -309,6 +318,21 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 12,
     marginTop: -16
+  },
+
+  backButton: {
+    marginBottom: 1,
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: 'green',
+    borderRadius: 8,
+    width: "50%",
+  },
+
+  backButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 
 });

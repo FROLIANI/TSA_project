@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button, SafeAreaView, Image  } from 'react-native';
 import { Menu, HamburgerIcon, Box, Pressable, NativeBaseProvider} from "native-base";
 import { useNavigation } from '@react-navigation/native';
@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 function OwnerHomeScreen() {
   
   return <Box style={styles.container}>
-   
+  
     <Text
       style={styles.description}>Telecom Owner
     </Text>
@@ -33,15 +33,38 @@ const Separator = () => (
 const MyButton = () => {
   const navigation = useNavigation();
 
+  const images = [
+    require('../../assets/slide1.jpeg'),
+    require('../../assets/slide5.jpeg'),
+    require('../../assets/slide4.jpeg'),
+    require('../../assets/slide3.jpeg'),
+   
+  ];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 4000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
 return(
   <SafeAreaView style={styles.container1}>
     <View style={styles.titleContainer}>
-        <Text style={styles.title}>TSA</Text>
+    <Text style={styles.title}>TSA</Text>
+    </View>
+    <View style={styles.logoContainer}>
+        <Image source={require('../../assets/Tsa.jpeg')} style={styles.bigLogo} />
+      
       </View>
-      <Image
-        source={require('../../assets/Tsa.jpeg')}
-        style={styles.logo}
-      />
+      <Image source={images[currentImageIndex]} style={styles.logo} />
+
     <View style={styles.buttonContainer}>
       <Button
         title="REGISTER VENDOR"
@@ -76,6 +99,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 12,
     borderRadius: 5,
+    borderWidth: 2,
+    borderColor:'blue',
     alignSelf: 'center',
     width: 375,
     maxWidth: '100%'
@@ -99,6 +124,12 @@ const styles = StyleSheet.create({
     padding: '20',
   },
 
+  logo: {
+    ...StyleSheet.absoluteFillObject,
+    width: undefined,
+    height: undefined,
+    borderRadius: 10,
+  },
 
   container1: {
     flex: 1,
@@ -121,7 +152,7 @@ const styles = StyleSheet.create({
 
   titleContainer: {
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 1,
   },
   title: {
     color: 'black',
@@ -129,17 +160,32 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+
   logo: {
-    width: 200,
-    height: 150,
+    width: 358,
+    height: 200,
     marginTop: 1,
     alignSelf:'center',
     borderRadius: 10,
   },
 
   buttonContainer: {
-    marginTop: 20,
+    marginTop: 3,
   },
+  
+  logoContainer: {
+    alignItems: 'center',
+    marginTop: 1,
+  },
+
+  bigLogo: {
+    width: 200,
+    height: 150,
+    marginBottom: 5,
+    borderRadius: 10,
+  }
+  
+
 });
 
 export default () => {

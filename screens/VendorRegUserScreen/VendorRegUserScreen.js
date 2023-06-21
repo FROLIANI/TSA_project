@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Input, Icon, Stack, Pressable, Button, NativeBaseProvider } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
-import { StyleSheet, View, Text, ScrollView } from "react-native";
+import { StyleSheet, View, Text, ScrollView,Picker } from "react-native";
 import { getDatabase, ref, push, set } from 'firebase/database';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
@@ -29,30 +29,51 @@ const VendorRegisterWorker = () => {
 
   const auth = getAuth();
 
+  const isValidDate = (dateString) => {
+    // Date validation logic
+    // Example: check if dateString is a valid date format
+    const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
+    return dateRegex.test(dateString);
+  };
+
   const handleCreate = () => {
     const errors = {};
 
     if (name.trim() === '') {
       errors.name = '*Name is required';
     }
+
     if (phone.trim() === '') {
-      errors.phone = '* Phone Number is required';
+      errors.phone = '*Phone Number is required';
+    } else if (!/^(0\d{9})$/.test(phone)) {
+      errors.phone = '*Invalid Phone Number';
     }
+
     if (dob.trim() === '') {
       errors.dob = '* Date Of Birth is required';
+    }else if (!isValidDate(dob)) {
+      errors.dob = "Invalid Dob Entered";
     }
+
     if (email.trim() === '') {
       errors.email = '*Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errors.email = '*Invalid Email';
     }
+
     if (gender.trim() === '') {
       errors.gender = '*Gender is required';
     }
     if (vendorType.trim() === '') {
       errors.vendorType = '*Vendor Type is required';
     }
+
     if (registerdate.trim() === '') {
       errors.registerdate = '*Register Date is required';
+    }else if (!isValidDate(registerdate)) {
+      errors.registerdate = "Invalid Date Registered";
     }
+
     if (password.trim() === '') {
       errors.password = '*Password is required';
     }
@@ -114,7 +135,7 @@ const VendorRegisterWorker = () => {
   }
 
   return (<View style={styles.container}>
-    <Text style={styles.heading}> Vendor Register Telecom Worker</Text>
+    <Text style={styles.heading}> Vendor Register  Worker</Text>
     <View style={styles.titleContainer}>
       <Text style={styles.titleText}> Register Here!</Text>
     </View>
@@ -125,7 +146,7 @@ const VendorRegisterWorker = () => {
           base: "75%",
           md: "25%"
         }} InputLeftElement={<Icon as={<MaterialIcons name="person" />}
-          size={5} ml="2" color="muted.400" />} placeholder="Name"
+          size={5} ml="2" color="muted.400" />} placeholder="Name eg Frolian"
           value={name} onChangeText={(text) => setName(text)}
           style={errorMessages.name ? styles.inputError : null}
         />
@@ -136,7 +157,7 @@ const VendorRegisterWorker = () => {
           base: "75%",
           md: "25%"
         }} InputLeftElement={<Icon as={<MaterialIcons name="phone-android" />}
-          size={5} ml="2" color="muted.400" />} placeholder="Phone Number"
+          size={5} ml="2" color="muted.400" />} placeholder="Phone Number eg 0632345678"
           value={phone} onChangeText={(text) => setPhone(text)}
           style={errorMessages.phone ? styles.inputError : null}
         />
@@ -146,7 +167,7 @@ const VendorRegisterWorker = () => {
           base: "75%",
           md: "25%"
         }} InputLeftElement={<Icon as={<MaterialIcons name="person" />}
-          size={5} ml="2" color="muted.400" />} placeholder=" dob"
+          size={5} ml="2" color="muted.400" />} placeholder=" dob eg 02-02-2023"
           value={dob} onChangeText={(text) => setDob(text)}
           style={errorMessages.dob ? styles.inputError : null}
         />
@@ -156,20 +177,24 @@ const VendorRegisterWorker = () => {
           base: "75%",
           md: "25%"
         }} InputLeftElement={<Icon as={<MaterialIcons name="email" />}
-          size={5} ml="2" color="muted.400" />} placeholder="email"
+          size={5} ml="2" color="muted.400" />} placeholder="email eg noela@gmail.com "
           value={email} onChangeText={(text) => setemail(text)}
           style={errorMessages.email ? styles.inputError : null}
         />
         {errorMessages.email && <Text style={styles.errorText}>{errorMessages.email}</Text>}
 
-        <Input w={{
-          base: "75%",
-          md: "25%"
-        }} InputLeftElement={<Icon as={<MaterialIcons name="person-pin-circle" />}
-          size={5} ml="2" color="muted.400" />} placeholder=" gender"
-          value={gender} onChangeText={(text) => setGender(text)}
-          style={errorMessages.gender ? styles.inputError : null}
-        />
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Gender:</Text>
+          <Picker
+            style={styles.picker}
+            selectedValue={gender}
+            onValueChange={(value) => setGender(value)}
+          >
+            <Picker.Item label="Male" value="male" />
+            <Picker.Item label="Female" value="female" />
+            <Picker.Item label="Other" value="other" />
+          </Picker>
+        </View>
         {errorMessages.gender && <Text style={styles.errorText}>{errorMessages.gender}</Text>}
 
 
@@ -177,7 +202,7 @@ const VendorRegisterWorker = () => {
           base: "75%",
           md: "25%"
         }} InputLeftElement={<Icon as={<MaterialIcons name="bookmark-border" />}
-          size={5} ml="2" color="muted.400" />} placeholder="Vendor Type"
+          size={5} ml="2" color="muted.400" />} placeholder="Vendor Type eg Tigo"
           value={vendorType} onChangeText={(text) => setVendorType(text)}
           style={errorMessages.vendorType ? styles.inputError : null}
         />
@@ -188,7 +213,7 @@ const VendorRegisterWorker = () => {
           base: "75%",
           md: "25%"
         }} InputLeftElement={<Icon as={<MaterialIcons name="calendar-today" />}
-          size={5} ml="2" color="muted.400" />} placeholder="Date Registerd"
+          size={5} ml="2" color="muted.400" />} placeholder="Date Registerd eg 02-02-2023"
           value={registerdate} onChangeText={(text) => setRegisterdate(text)}
           style={errorMessages.registerdate ? styles.inputError : null}
         />
@@ -290,7 +315,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     backgroundColor: "#f2f2f2",
     paddingVertical: 2,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   titleText: {
     fontWeight: "bold",
@@ -307,7 +332,8 @@ const styles = StyleSheet.create({
     height: 50,
     width: '100%',
     textAlign: 'center',
-    paddingTop: 10,
+    paddingTop: 20,
+    paddingBottom:20,
     shapeMargin: 'corner',
     fontSize: 24
 
@@ -327,6 +353,23 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 12,
     marginTop: -16
+  },
+
+  inputContainer: {
+    width: "75%",
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10, // Add marginBottom to create space between inputs
+  },
+  label: {
+    flex: 1,
+    fontSize: 16,
+    marginRight: 10,
+    textAlign: "left", // Align label text to the right
+  },
+  picker: {
+    flex: 1,
+    height: 40,
   },
 
 });

@@ -1,7 +1,7 @@
-
 import React, { useEffect, useState } from "react";
 import { getDatabase, ref, onValue, update } from "firebase/database";
 import { View, Text, StyleSheet, FlatList, Button } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
 const database = getDatabase();
 
@@ -30,7 +30,7 @@ const CheckUserDetails = () => {
             <Text style={styles.itemText}>Phone: {item.phone}</Text>
             <Text style={styles.itemText}>Date of Birth: {item.dob}</Text>
             <Text style={styles.itemText}>Gender: {item.gender}</Text>
-            <Text style={styles.itemText}>VendorType: {item.VendorType}</Text>
+            <Text style={styles.itemText}>VendorType: {item.vendorType}</Text>
             <Text style={styles.itemText}>Register Date: {item.registerdate}</Text>
             <Text style={styles.itemText}>Password: {item.password}</Text>
             <Text style={styles.itemText}>Confirmed Password: {item.cpassword}</Text>
@@ -38,9 +38,9 @@ const CheckUserDetails = () => {
     );
 
     //Handle navigate to back
+      const navigation = useNavigation();
     const handleBackButton = () => {
-        console.log('Navigate back');
-        // Add your navigation logic here
+        navigation.navigate("UserHomeScreen")
     };
 
     return (
@@ -66,7 +66,7 @@ const CheckUserDetails = () => {
                 contentContainerStyle={{ alignItems: "center" }} // Center vertically
             />
             <View style={{ marginBottom: 20, backgroundColor: 'green' }}>
-                <Button title="Back" onPress={handleBackButton} color="blue" />
+                <Button title="Back Home" onPress={handleBackButton} color="blue" />
             </View>
 
         </View>

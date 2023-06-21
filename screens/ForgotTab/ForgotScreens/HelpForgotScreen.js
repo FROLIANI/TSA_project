@@ -1,6 +1,13 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking, ScrollView } from 'react-native';
-import { color } from 'react-native-reanimated';
+import React, { useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+  ScrollView,
+  AppState
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const MainHeader = () => {
@@ -22,20 +29,18 @@ const BaseCard = ({ title, content }) => {
 };
 
 const VendorCard = () => {
-
-  //For vendor
   const email = 'httmanager@example.com';
   const phoneNumber = '+255718658450/+255718658450';
   const address = '12 Mpwapwa,Dodoma, Tanzania';
 
-  const HandleEmailPress = () => {
+  const handleEmailPress = () => {
     Linking.openURL(`mailto:${email}`);
-  }
-  const HandlePhonePress = () => {
+  };
+  const handlePhonePress = () => {
     Linking.openURL(`tel:${phoneNumber}`);
   };
 
-  const HandleAddressPress = () => {
+  const handleAddressPress = () => {
     Linking.openURL(`https://maps.google.com/?q=${address}`);
   };
 
@@ -46,17 +51,17 @@ const VendorCard = () => {
         <View style={styles.cardDivider} />
 
         <Text style={styles.EmailText}>Email:</Text>
-        <TouchableOpacity onPress={HandleEmailPress}>
-          <Text style={styles.emailLink}> {email}</Text>
+        <TouchableOpacity onPress={handleEmailPress}>
+          <Text style={styles.emailLink}>{email}</Text>
         </TouchableOpacity>
 
         <Text style={styles.PhoneText}>Phone Number:</Text>
-        <TouchableOpacity onPress={HandlePhonePress}>
+        <TouchableOpacity onPress={handlePhonePress}>
           <Text style={styles.link}>{phoneNumber}</Text>
         </TouchableOpacity>
 
         <Text style={styles.AddressText}>Address:</Text>
-        <TouchableOpacity onPress={HandleAddressPress}>
+        <TouchableOpacity onPress={handleAddressPress}>
           <Text style={styles.link}>{address}</Text>
         </TouchableOpacity>
       </View>
@@ -69,33 +74,34 @@ const UserCard = () => {
   const phoneNumber = '+255678902914/+255624594623';
   const address = '12 Hazina,Mp, Dom';
 
-  const HandleEmailPress = () => {
+  const handleEmailPress = () => {
     Linking.openURL(`mailto:${email}`);
-  }
-  const HandlePhonePress = () => {
+  };
+  const handlePhonePress = () => {
     Linking.openURL(`tel:${phoneNumber}`);
   };
 
-  const HandleAddressPress = () => {
+  const handleAddressPress = () => {
     Linking.openURL(`https://maps.google.com/?q=${address}`);
   };
+
   return (
     <ScrollView>
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Details to Contact</Text>
         <View style={styles.cardDivider} />
         <Text style={styles.EmailText}>Email:</Text>
-        <TouchableOpacity onPress={HandleEmailPress}>
-          <Text style={styles.emailLink}> {email}</Text>
+        <TouchableOpacity onPress={handleEmailPress}>
+          <Text style={styles.emailLink}>{email}</Text>
         </TouchableOpacity>
 
         <Text style={styles.PhoneText}>Phone Number:</Text>
-        <TouchableOpacity onPress={HandlePhonePress}>
+        <TouchableOpacity onPress={handlePhonePress}>
           <Text style={styles.link}>{phoneNumber}</Text>
         </TouchableOpacity>
 
         <Text style={styles.AddressText}>Address:</Text>
-        <TouchableOpacity onPress={HandleAddressPress}>
+        <TouchableOpacity onPress={handleAddressPress}>
           <Text style={styles.link}>{address}</Text>
         </TouchableOpacity>
       </View>
@@ -106,13 +112,26 @@ const UserCard = () => {
 const App = () => {
   const navigation = useNavigation();
   const handleBackButton = () => {
-    navigation.navigate("SignInScreen")
+    navigation.navigate('SignInScreen');
   };
+
+  const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState) => {
+      appState.current = nextAppState;
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
-      <ScrollView >
-
+      <ScrollView>
         <MainHeader />
         <BaseCard title="For Vendor only" content={<VendorCard />} />
         <BaseCard title="For Telecom Worker Only" content={<UserCard />} />
@@ -121,7 +140,6 @@ const App = () => {
       <TouchableOpacity style={styles.backButton} onPress={handleBackButton}>
         <Text style={styles.backButtonText}>Back</Text>
       </TouchableOpacity>
-
     </View>
   );
 };
@@ -169,7 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
-    textAlign: 'center'
+    textAlign: 'center',
   },
 
   cardDivider: {
@@ -190,19 +208,19 @@ const styles = StyleSheet.create({
 
   EmailText: {
     fontSize: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
 
   PhoneText: {
     fontSize: 20,
     marginTop: 5,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
 
   AddressText: {
     fontSize: 20,
     marginTop: 5,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
 
   backButton: {
@@ -212,16 +230,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: 'blue',
     borderRadius: 5,
-    minWidth: "50%"
+    minWidth: '50%',
   },
 
   backButtonText: {
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: "white"
+    color: 'white',
   },
-
 });
 
 export default App;

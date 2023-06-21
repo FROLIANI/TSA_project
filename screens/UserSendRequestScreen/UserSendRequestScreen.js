@@ -1,31 +1,30 @@
-
-import react, { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
+import {
+  Box,
+  Heading,
+  VStack,
+  FormControl,
+  Input,
+  Button,
+  Stack,
+  Icon,
+  NativeBaseProvider,
+  TextArea,
+  Text,
+  ScrollView,
+} from "native-base";
 import { Ionicons } from "@expo/vector-icons";
-import { Box, Heading, VStack, FormControl, Input, Button, Stack, Icon, NativeBaseProvider, TextArea } from "native-base";
-import { View, Text, ScrollView } from 'react-native';
-import { getDatabase, ref, set, push } from 'firebase/database';
+import { View } from "react-native";
+import { getDatabase, ref, set, push } from "firebase/database";
+import moment from 'moment';
 
-const database = getDatabase();
-
-export { database, ref, set, push };
 
 const SendRequest = () => {
-
-  const [date, setDate] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [vendor, setVendor] = useState('');
-  const [reason, setReason] = useState('');
-
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState('');
-
-  const dateInputRef = useRef(null);
-  const nameInputRef = useRef(null);
-  const emailInputRef = useRef(null);
-  const vendorInputRef = useRef(null);
-  const textareaRef = useRef(null);
-  const documentInputRef = useRef(null);
+  const [date, setDate] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [vendor, setVendor] = useState("");
+  const [reason, setReason] = useState("");
 
   const [dateError, setDateError] = useState("");
   const [nameError, setNameError] = useState("");
@@ -33,10 +32,34 @@ const SendRequest = () => {
   const [vendorError, setVendorError] = useState("");
   const [reasonError, setReasonError] = useState("");
 
-  const handlesendRequest = () => {
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+
+  const dateInputRef = useRef(null);
+  const nameInputRef = useRef(null);
+  const emailInputRef = useRef(null);
+  const vendorInputRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  const database = getDatabase();
+
+  const handleSendRequest = () => {
     let isValid = true;
 
-    if (!date) {
+    if (!date || !moment(date,
+      ['DD/MM/YYYY',
+        'MM/DD/YYYY',
+        'YYYY/MM/DD',
+        'DD-MM-YYYY',
+        'MM-DD-YYYY',
+        'YYYY-MM-DD',
+        'DD.MM.YYYY',
+        'MM.DD.YYYY',
+        'YYYY.MM.DD',
+        'YYYY.M.D',
+        'D/M/YYYY',
+        'D.M.YYYY'],
+      true).isValid()) {
       isValid = false;
       setDateError("Please enter a valid date.");
     } else {
@@ -50,7 +73,8 @@ const SendRequest = () => {
       setNameError("");
     }
 
-    if (!email) {
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!email || !emailRegex.test(email)) {
       isValid = false;
       setEmailError("Please enter a valid email address.");
     } else {
@@ -72,13 +96,15 @@ const SendRequest = () => {
     }
 
     if (!isValid) {
-      return;
+      setPopupMessage("Please fill in all required fields.");
+      setShowPopup(true);
 
-      setDateError("");
-      setNameError("");
-      setEmailError("");
-      setVendorError("");
-      setReasonError("");
+      setTimeout(() => {
+        setShowPopup(false);
+        setPopupMessage("");
+      }, 3000);
+
+      return;
     }
 
     // Create a new user object
@@ -88,63 +114,67 @@ const SendRequest = () => {
       email,
       vendor,
       reason,
-      document,
     };
 
-    const usersRef = ref(database, 'TSA/Worker_Request');
+    const usersRef = ref(database, "TSA/Worker_Request");
 
     // Insert user data into Firebase using push
     push(usersRef, workerDetails)
       .then(() => {
-        alert('Request Sent successfully!');
+        alert("Request Sent successfully!");
+        resetData();
       })
       .catch((error) => {
-        alert('Request error', error);
+        alert("Request error", error);
       });
   };
 
   const resetData = () => {
-    setSelectedFile(null);
-    setShowPopup(false);
-    setPopupMessage('');
+    setDate("");
+    setName("");
+    setEmail("");
+    setVendor("");
+    setReason("");
 
-    //for reset
-    if (dateInputRef.current) {
-      dateInputRef.current.clear();
-    }
-    if (nameInputRef.current) {
-      nameInputRef.current.clear();
-    }
-    if (emailInputRef.current) {
-      emailInputRef.current.clear();
-    }
-    if (vendorInputRef.current) {
-      vendorInputRef.current.clear();
-    }
-    if (textareaRef.current) {
-      textareaRef.current.clear();
-    }
-    if (documentInputRef.current) {
-      documentInputRef.current.clear();
-    }
+    setDateError("");
+    setNameError("");
+    setEmailError("");
+    setVendorError("");
+    setReasonError("");
+
+    setShowPopup(false);
+    setPopupMessage("");
   };
 
   return (
     <ScrollView>
       <View>
         <Box safeArea p="2" w="90%" maxW="290" py="8" marginLeft={10} >
-          <Heading textAlign={'center'} size="lg" color="coolGray.800" _dark={{
-            color: "warmGray.50"
-          }} fontWeight="semibold" >
+          <Heading
+            textAlign={"center"}
+            size="lg"
+            color="coolGray.800"
+            _dark={{
+              color: "warmGray.50",
+            }}
+            fontWeight="semibold"
+          >
             Send the Request
           </Heading>
-          <Heading textAlign={'center'} mt="1" color="coolGray.600" _dark={{
-            color: "warmGray.200"
-          }} fontWeight="medium" size="xs">
+          <Heading
+            textAlign={"center"}
+            mt="1"
+            color="coolGray.600"
+            _dark={{
+              color: "warmGray.200",
+            }}
+            fontWeight="medium"
+            size="xs"
+          >
             Fill the request
           </Heading>
           <VStack space={3} mt="5">
-            <FormControl>
+            <FormControl isRequired isInvalid={dateError !== ""}>
               <FormControl.Label>Date</FormControl.Label>
               <Input
                 type="date"
@@ -159,47 +189,80 @@ const SendRequest = () => {
               <FormControl.ErrorMessage>{dateError}</FormControl.ErrorMessage>
             </FormControl>
 
-            <FormControl>
+            <FormControl isRequired isInvalid={nameError !== ""}>
               <FormControl.Label>Name</FormControl.Label>
-              <Input type="text"
+              <Input
+                type="text"
                 placeholder="Enter name"
                 ref={nameInputRef}
-                value={name} onChangeText={(text) => setName(text)}
+                value={name}
+                onChangeText={(text) => {
+                  setName(text);
+                  setNameError("");
+                }}
               />
+              <FormControl.ErrorMessage>{nameError}</FormControl.ErrorMessage>
             </FormControl>
 
-            <FormControl>
+            <FormControl isRequired isInvalid={emailError !== ""}>
               <FormControl.Label>Email</FormControl.Label>
-              <Input type="email"
+              <Input
+                type="email"
                 placeholder="Enter valid email Address"
                 ref={emailInputRef}
-                value={email} onChangeText={(text) => setEmail(text)}
+                value={email}
+                onChangeText={(text) => {
+                  setEmail(text);
+                  setEmailError("");
+                }}
               />
+              <FormControl.ErrorMessage>{emailError}</FormControl.ErrorMessage>
             </FormControl>
 
-            <FormControl>
+            <FormControl isRequired isInvalid={vendorError !== ""}>
               <FormControl.Label>Vendor</FormControl.Label>
-              <Input type="text"
+              <Input
+                type="text"
                 placeholder="Enter your vendor"
                 ref={vendorInputRef}
-                value={vendor} onChangeText={(text) => setVendor(text)}
+                value={vendor}
+                onChangeText={(text) => {
+                  setVendor(text);
+                  setVendorError("");
+                }}
               />
+              <FormControl.ErrorMessage>{vendorError}</FormControl.ErrorMessage>
             </FormControl>
-            <FormControl>
+
+            <FormControl isRequired isInvalid={reasonError !== ""}>
               <FormControl.Label>Reason</FormControl.Label>
-              <TextArea type="text"
+              <TextArea
+                type="text"
                 ref={textareaRef}
                 placeholder="Enter Comment"
-                value={reason} onChangeText={(text) => setReason(text)}
+                value={reason}
+                onChangeText={(text) => {
+                  setReason(text);
+                  setReasonError("");
+                }}
               />
-
+              <FormControl.ErrorMessage>{reasonError}</FormControl.ErrorMessage>
             </FormControl>
 
-            <Stack style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 20 }}>
+            {showPopup && (
+              <Box bg="red.200" p={2} mt={2}>
+                <Text color="red.800">{popupMessage}</Text>
+              </Box>
+            )}
 
-              <Button variant="subtle" endIcon={<Icon as={Ionicons} size="md" onPress={resetData} />}> Reset</Button>
+            <Stack style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 20 }}>
+              <Button variant="subtle" endIcon={<Icon as={Ionicons} size="md" onPress={resetData} />}>
+                Reset
+              </Button>
 
-              <Button size="md" colorScheme="indigo" onPress={handlesendRequest} >Send </Button>
+              <Button size="md" colorScheme="indigo" onPress={handleSendRequest}>
+                Send
+              </Button>
             </Stack>
           </VStack>
         </Box>
@@ -215,5 +278,3 @@ export default () => {
     </NativeBaseProvider>
   );
 };
-
-

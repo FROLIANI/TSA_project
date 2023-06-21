@@ -27,10 +27,9 @@ const CheckUserDetails = () => {
       <Text style={styles.itemText}>Phone: {item.phone}</Text>
       <Text style={styles.itemText}>Date of Birth: {item.dob}</Text>
       <Text style={styles.itemText}>Gender: {item.gender}</Text>
-      <Text style={styles.itemText}>VendorType: {item.VendorType}</Text>
+      <Text style={styles.itemText}>VendorType: {item.vendorType}</Text>
       <Text style={styles.itemText}>Register Date: {item.registerdate}</Text>
-      <Text style={styles.itemText}>Password: {item.password}</Text>
-      <Text style={styles.itemText}>Confirmed Password: {item.cpassword}</Text>
+
     </View>
   );
 

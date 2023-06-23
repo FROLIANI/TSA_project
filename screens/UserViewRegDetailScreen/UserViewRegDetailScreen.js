@@ -9,7 +9,7 @@ const CheckUserDetails = () => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        const usersRef = ref(database, 'TSA/worker');
+        const usersRef = ref(database, 'TSA/Worker');
         const unsubscribe = onValue(usersRef, (snapshot) => {
             const data = snapshot.val();
             const updatedUsers = data ? Object.entries(data).map(([id, user]) => ({ id, ...user })) : [];
@@ -32,8 +32,7 @@ const CheckUserDetails = () => {
             <Text style={styles.itemText}>Gender: {item.gender}</Text>
             <Text style={styles.itemText}>VendorType: {item.vendorType}</Text>
             <Text style={styles.itemText}>Register Date: {item.registerdate}</Text>
-            <Text style={styles.itemText}>Password: {item.password}</Text>
-            <Text style={styles.itemText}>Confirmed Password: {item.cpassword}</Text>
+           
         </View>
     );
 

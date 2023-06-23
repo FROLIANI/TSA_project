@@ -12,7 +12,7 @@ export default function AuthNav() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="BottomVendor"
+        initialRouteName="SignInScreen"
       >
 
         <Stack.Screen name="SignInScreen" component={SignInScreen}

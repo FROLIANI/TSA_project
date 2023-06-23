@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button, SafeAreaView, Image  } from 'react-native';
-import { Menu, HamburgerIcon, Box, Pressable, NativeBaseProvider} from "native-base";
+import { Text, View, StyleSheet, Button, SafeAreaView, Image } from 'react-native';
+import { Menu, HamburgerIcon, Box, Pressable, NativeBaseProvider } from "native-base";
 import { useNavigation } from '@react-navigation/native';
-
-
+import { getAuth, signOut } from 'firebase/auth';
 
 function OwnerHomeScreen() {
-  
+
+  const auth = getAuth();
+  const navigation = useNavigation();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigation.navigate('SignInScreen')
+    } catch (error) {
+      console.error('Error occurred during logout:', error);
+    }
+  };
+
   return <Box style={styles.container}>
-  
+
     <Text
       style={styles.description}>Telecom Owner
     </Text>
@@ -17,12 +28,16 @@ function OwnerHomeScreen() {
         <HamburgerIcon />
       </Pressable>;
     }}>
-      <Menu.Item>Logout</Menu.Item>
-      <Menu.Item>Profile</Menu.Item>
+      <Menu.Item>Home</Menu.Item>
+      <Menu.Item><View style={styles.logoutContainer}>
+        <Pressable onPress={handleLogout}>
+          <Text style={styles.logoutText}>Logout</Text>
+        </Pressable>
+      </View></Menu.Item>
     </Menu>
   </Box>;
 
-     
+
 }
 
 const Separator = () => (
@@ -38,7 +53,7 @@ const MyButton = () => {
     require('../../assets/slide5.jpeg'),
     require('../../assets/slide4.jpeg'),
     require('../../assets/slide3.jpeg'),
-   
+
   ];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -54,42 +69,42 @@ const MyButton = () => {
     };
   }, []);
 
-return(
-  <SafeAreaView style={styles.container1}>
-    <View style={styles.titleContainer}>
-    <Text style={styles.title}>TSA</Text>
-    </View>
-    <View style={styles.logoContainer}>
+  return (
+    <SafeAreaView style={styles.container1}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}> Welcome TSA!<br/><i>The Service You Deserve</i></Text>
+      </View>
+      <View style={styles.logoContainer}>
         <Image source={require('../../assets/Tsa.jpeg')} style={styles.bigLogo} />
-      
+
       </View>
       <Image source={images[currentImageIndex]} style={styles.logo} />
 
-    <View style={styles.buttonContainer}>
-      <Button
-        title="REGISTER VENDOR"
-        onPress={() => { navigation.navigate('OwnerRegVendorScreen') }}
-        
-      />
-    </View>
-    <Separator />
-    <View>
-      <Button    
-        title="USER REQUEST"
-        color="#f194ff"
-        onPress={() => { navigation.navigate('OwnerCheckVerification') }}
-      />
-    </View>
-    <Separator />
-    <View>
-      <Button
-        title="VENDOR LIST"
-        color="darkgreen"
-        onPress={() => { navigation.navigate('VendorListScreen') }}
-      />
-    </View>
-  </SafeAreaView>
-)
+      <View style={styles.buttonContainer}>
+        <Button
+          title="REGISTER VENDOR"
+          onPress={() => { navigation.navigate('OwnerRegVendorScreen') }}
+
+        />
+      </View>
+      <Separator />
+      <View>
+        <Button
+          title="USER REQUEST"
+          color="#f194ff"
+          onPress={() => { navigation.navigate('OwnerCheckVerification') }}
+        />
+      </View>
+      <Separator />
+      <View>
+        <Button
+          title="VENDOR LIST"
+          color="darkgreen"
+          onPress={() => { navigation.navigate('VendorListScreen') }}
+        />
+      </View>
+    </SafeAreaView>
+  )
 
 };
 
@@ -100,7 +115,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor:'blue',
+    borderColor: 'blue',
     alignSelf: 'center',
     width: 375,
     maxWidth: '100%'
@@ -145,7 +160,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   separator: {
-    marginVertical: 8,
+    marginVertical: 3,
     borderBottomColor: '#737373',
     borderColor: 'none'
   },
@@ -165,14 +180,14 @@ const styles = StyleSheet.create({
     width: 358,
     height: 200,
     marginTop: 1,
-    alignSelf:'center',
+    alignSelf: 'center',
     borderRadius: 10,
   },
 
   buttonContainer: {
     marginTop: 3,
   },
-  
+
   logoContainer: {
     alignItems: 'center',
     marginTop: 1,
@@ -181,11 +196,19 @@ const styles = StyleSheet.create({
   bigLogo: {
     width: 200,
     height: 150,
-    marginBottom: 5,
+    marginBottom: 1,
     borderRadius: 10,
-  }
+  },
+  logoutContainer: {
+    alignItems: 'flex-end',
+    paddingRight: 10,
+  },
   
-
+  logoutText: {
+    color: 'grey',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 export default () => {

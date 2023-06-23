@@ -2,8 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button, SafeAreaView, Image } from 'react-native';
 import { Menu, HamburgerIcon, Box, Pressable, NativeBaseProvider } from "native-base";
 import { useNavigation } from '@react-navigation/native';
+import { getAuth, signOut } from 'firebase/auth';
+
 
 function VendorHomeScreen() {
+  const auth = getAuth();
+  const navigation = useNavigation();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigation.navigate('SignInScreen')
+    } catch (error) {
+      console.error('Error occurred during logout:', error);
+    }
+  };
+  
   return <Box style={styles.container}>
     <Text
       style={styles.description}>Vendor Home Dashboard
@@ -15,7 +29,11 @@ function VendorHomeScreen() {
     }}>
       <Menu.Item>Home</Menu.Item>
       <Menu.Item>About</Menu.Item>
-      <Menu.Item>LogOut</Menu.Item>
+      <Menu.Item><View style={styles.logoutContainer}>
+        <Pressable onPress={handleLogout}>
+          <Text style={styles.logoutText}>Logout</Text>
+        </Pressable>
+      </View></Menu.Item>
     </Menu>
   </Box>;
 }
@@ -31,7 +49,7 @@ const MyButton = () => {
     require('../../assets/v1.jpeg'),
     require('../../assets/vendor1.jpeg'),
     require('../../assets/vendor22.jpeg'),
-   
+
   ];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -50,15 +68,15 @@ const MyButton = () => {
 
 
   return (<SafeAreaView style={styles.container1}>
-<View style={styles.titleContainer}>
-    <Text style={styles.title2}> Welcome TSA</Text>
+    <View style={styles.titleContainer}>
+      <Text style={styles.title2}> Welcome TSA</Text>
     </View>
     <View>
       <View>
-      <Image source={images[currentImageIndex]} style={styles.logo} />
-      <View style={styles.TitleActionContainer}>
-        <Text style={styles.TitleAction} >Here your Actions!</Text>
-      </View>
+        <Image source={images[currentImageIndex]} style={styles.logo} />
+        <View style={styles.TitleActionContainer}>
+          <Text style={styles.TitleAction} >Here your Actions!</Text>
+        </View>
       </View>
 
       <Button
@@ -102,7 +120,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#0891b2',
     paddingVertical: 16,
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
     borderRadius: 5,
     alignSelf: 'baseline',
     width: 375,
@@ -150,10 +168,10 @@ const styles = StyleSheet.create({
 
   logo: {
     width: 358,
-    height: 200,
+    height: 230,
     marginTop: 2,
-    marginBottom:70,
-    alignSelf:'center',
+    marginBottom: 70,
+    alignSelf: 'center',
     borderRadius: 10,
   },
 
@@ -167,19 +185,31 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
-    paddingBottom:4
+    paddingBottom: 4
   },
 
-  TitleActionContainer:{
+  TitleActionContainer: {
     marginBottom: 3
   },
 
-  TitleAction:{
-    fontSize:15,
-    textAlign:'center',
-    fontWeight:'bold',
+  TitleAction: {
+    fontSize: 15,
+    textAlign: 'center',
+    fontWeight: 'bold',
 
-  }
+  },
+
+  logoutContainer: {
+    alignItems: 'flex-end',
+    paddingRight: 10,
+  },
+  
+  logoutText: {
+    color: 'grey',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
 
 });
 

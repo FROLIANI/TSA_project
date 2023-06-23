@@ -1,16 +1,15 @@
-import React, { useState, useContext, useEffect, } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Box, Heading, VStack, FormControl, Input, Button,
   Center, NativeBaseProvider, Icon, Modal
 } from "native-base";
-import { useNavigation } from '@react-navigation/native';
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Ionicons } from '@expo/vector-icons';
-import { Image, Text } from "react-native";
-import { getDatabase, ref, set, get } from "firebase/database";
-
+import { Image, Text, ImageBackground } from "react-native";
+import { getDatabase, ref, onValue } from "firebase/database";
 import { UserContext } from '../../../Providers/UserContext';
+import { useNavigation } from '@react-navigation/native';
 
 //Firebase Configuration
 const firebaseConfig = {
@@ -25,32 +24,45 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const database = getDatabase(app);
+const db = getDatabase(app);
 
 const SignIn = () => {
-  //const userId = route.params.userId;
-  const userRole = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
-
   const emailString = email.toString().trim();
   const passwordString = password.toString().trim();
-
   const userRoleContext = useContext(UserContext);
+  const [userRole, setUserRole] = useState('');
+  const userRoleRef = ref(db, 'TSA/Vendor');
 
+  useEffect(() => {
+    const unsubscribe = onValue(userRoleRef, (snapshot) => {
+      const userData = snapshot.val();
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        // Assuming you have a user ID associated with the authenticated user
+        const userId = currentUser.uid;
+        const role = userData[userId]?.role;
+        setUserRole(role);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  // Rest of the code...
   // Function to validate email format
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-
 
   useEffect(() => {
     let timer;
@@ -73,9 +85,7 @@ const SignIn = () => {
 
 
   const navigation = useNavigation();
-
   const handleSignIn = async () => {
-
     // Validate email if is empty
     if (emailString === '') {
       setEmailError("Email cannot be empty");
@@ -99,52 +109,71 @@ const SignIn = () => {
       return;
     }
 
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, emailString, passwordString);
-      const user = userCredential.user;
-      // You can fetch additional user data from the Realtime Database based on the user's ID
-      const snapshot = await get(ref(database, `users/${user.uid}`));
-      const userData = snapshot.val();
-      if (userData) {
-        const userRole = userData.role;
-        // fetchDataBasedOnRole(userRole);
 
-        // Update the userRole in the UserContext
-        userRoleContext.setUserRole(userRole);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
 
-        //  Check user role and navigate to the respective page
-        if (userRole === 'Admin') {
-          setIsLoading(false);
-          setShowModal(true);
-          setModalMessage("Login successful!");
-          navigation.navigate('BottomOwner');
+        // Fetch the user's role from the database
+        const databaseRef = ref(getDatabase(app), `TSA/Worker/${user.uid}/role`);
+        onValue(databaseRef, (snapshot) => {
+          const role = snapshot.val();
 
-        } else if (userRole === 'Vendor') {
-          setIsLoading(false);
-          setShowModal(true);
-          setModalMessage("Login successful!");
-          navigation.navigate('BottomVendor');
-
-        } else if (userRole === 'Worker') {
-          navigation.navigate('BottomUser');
-          setIsLoading(false);
-          setShowModal(true);
-          setModalMessage("Login successful!");
-        }
-        else {
-          setShowModal(true);
-          setModalMessage("User data not found. Please try again.");
-        }
-      }
-    } catch (error) {
-      setShowModal(true);
-      setModalMessage("Wrong email or password. Please try again.");
-      console.log(error);
-    }
+          // Check if the user is an admin
+          if (role === 'Admin') {
+            console.log('Admin Login')
+          }
+          if (role === 'Vendor') {
+            console.log('Vendor Login')
+          }
+          else {
+            navigation.navigate('BottomUser')
+          }
+        }, (error) => {
+          console.log('error', error)
+        });
+      })
+      .catch((error) => {
+        console.log('error', error)
+      });
   };
 
   return <Center w="100%">
     <Box safeArea p="2" w="90%" maxW="290" py="8">
+      <Box
+        bg={{
+          source: require("../../../assets/mnara.jpg"),
+        }}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginBottom: 20,
+          borderRadius: 10,
+        }}
+      >
+        <Image
+          source={require("../../../assets/mnara.jpg")}
+          style={{
+            width: 60,
+            height: 60,
+            marginRight: 5,
+            marginBottom: 20,
+          }}
+        />
+        <Text
+          style={{
+            color: 'blue',
+            fontSize: 20,
+            textAlign: 'center',
+            fontWeight: 'bold',
+            marginBottom: 35,
+          }}
+        >
+          <Text  style={{ color: 'purple', fontSize:25}}>Telecom</Text> Site{' '}
+          <Text style={{ color: '#a78bfa' }}>Access</Text>
+        </Text>
+      </Box>
+
       <Image source={require("../../../assets/Tsa.jpeg")}
         style={
           {
@@ -197,8 +226,6 @@ const SignIn = () => {
           onPress={handleSignIn}
           bg="blue.600"
           mt="2"
-          startIcon={<LeftIcon name="log-in" color="blue" />}
-          colorScheme="blue"
         >
           LOGIN
         </Button>
@@ -206,10 +233,8 @@ const SignIn = () => {
       </VStack>
       <Button
         onPress={() => navigation.navigate("ForgotTab")}
-        bg="blue.600"
+        bg="amber.400"
         mt="2"
-        startIcon={<LeftIcon name="lock-closed" color="white" />}
-        colorScheme="blue"
       >
         RESET PASSWORD
       </Button>

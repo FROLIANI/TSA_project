@@ -2,9 +2,25 @@ import React from 'react'
 import { Text, View, StyleSheet, Button, SafeAreaView, Image } from 'react-native';
 import { Menu, HamburgerIcon, Box, Pressable, NativeBaseProvider } from "native-base";
 import { useNavigation } from '@react-navigation/native';
+import { getAuth, signOut } from 'firebase/auth';
+
 
 function OwnerHomeScreen() {
+  const auth = getAuth();
+  const navigation = useNavigation();
+
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigation.navigate('SignInScreen')
+    } catch (error) {
+      console.error('Error occurred during logout:', error);
+    }
+  };
+  
   return <Box style={styles.container}>
+
     <Text
       style={styles.description}>Welcome User Home!
     </Text>
@@ -13,10 +29,15 @@ function OwnerHomeScreen() {
         <HamburgerIcon />
       </Pressable>;
     }}>
-      <Menu.Item>Logout</Menu.Item>
-      <Menu.Item>Profile</Menu.Item>
+      <Menu.Item><View style={styles.logoutContainer}>
+        <Pressable onPress={handleLogout}>
+          <Text style={styles.logoutText}>Logout</Text>
+        </Pressable>
+      </View></Menu.Item>
+      <Menu.Item>Home</Menu.Item>
     </Menu>
   </Box>;
+
 }
 
 const Separator = () => (
@@ -26,14 +47,13 @@ const Separator = () => (
 
 const MyButton = () => {
   const navigation = useNavigation();
-
   return (
     <SafeAreaView style={styles.container1}>
-       <View style={styles.longTextContainer}>
-      <Text style={styles.longText}>
+      <View style={styles.longTextContainer}>
+        <Text style={styles.longText}>
           You are Warmly Encouraged feel free to perform your Activities as Appropriately
         </Text>
-        </View>
+      </View>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>TSA</Text>
       </View>
@@ -174,6 +194,17 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 16,
+  },
+
+  logoutContainer: {
+    alignItems: 'flex-end',
+    paddingRight: 10,
+  },
+  
+  logoutText: {
+    color: 'grey',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 
 });

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
 import HomeTabscreen from '../../Screens/ForgotTab/HomeTabscreen';
 import SettingScreen from '../../Screens/ForgotTab/SettingScreen';
 import HelpScreen from '../../Screens/ForgotTab/HelpScreen';

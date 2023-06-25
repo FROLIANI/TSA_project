@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View,  Button, FlatList, StyleSheet, Text } from 'react-native';
+import { View, Button, FlatList, StyleSheet, Text } from 'react-native';
 import { getDatabase, ref, onValue, update } from 'firebase/database';
-import { Input,Stack,NativeBaseProvider} from 'native-base'
+import { Input, Stack, NativeBaseProvider } from 'native-base'
+import { useNavigation } from '@react-navigation/native';
+
 
 const database = getDatabase();
 
@@ -12,7 +14,7 @@ const UpdateVendor = () => {
 
   useEffect(() => {
     const fetchData = () => {
-      const dataRef = ref(database, 'TSA/Vendor');
+      const dataRef = ref(database, `TSA/Vendor`);
       onValue(dataRef, (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -32,8 +34,9 @@ const UpdateVendor = () => {
     fetchData();
   }, []);
 
-  const handleBack =() =>{
-    console.log('You back!')
+  const navigation = useNavigation();
+  const handleBack = () => {
+    navigation.navigate('OwnerHomeScreen')
   }
 
   const handleUpdate = (item) => {
@@ -41,7 +44,7 @@ const UpdateVendor = () => {
       name: item.name,
       vendorId: item.vendorId,
       contact: item.contact,
-      contactDetails: item.contactDetails,
+      email: item.email,
       address: item.address,
       vendorType: item.vendorType,
       registerdate: item.registerdate,
@@ -54,7 +57,7 @@ const UpdateVendor = () => {
         alert('Vendor successfully updated');
       })
       .catch((error) => {
-      alert('Error updating Vendor: ', error);
+        alert('Error updating Vendor: ', error);
       });
   };
 
@@ -89,6 +92,7 @@ const UpdateVendor = () => {
           });
         }}
       />
+
       <Input
         variant="outline"
         value={item.contact}
@@ -103,13 +107,14 @@ const UpdateVendor = () => {
           });
         }}
       />
-      <Input
+
+<Input
         variant="outline"
-        value={item.address}
-        placeholder='Address'
+        value={item.email}
+        placeholder='Email'
         onChangeText={(text) => {
           setUpdatedUserData((prevData) => {
-            const updatedItem = { ...item, address: text };
+            const updatedItem = { ...item, email: text };
             const newData = prevData.map((data) =>
               data.id === item.id ? updatedItem : data
             );
@@ -117,13 +122,14 @@ const UpdateVendor = () => {
           });
         }}
       />
+
       <Input
         variant="outline"
-        value={item.contactDetails}
-        placeholder='Contact Details'
+        value={item.address}
+        placeholder='Address'
         onChangeText={(text) => {
           setUpdatedUserData((prevData) => {
-            const updatedItem = { ...item, contactDetails: text };
+            const updatedItem = { ...item, address: text };
             const newData = prevData.map((data) =>
               data.id === item.id ? updatedItem : data
             );
@@ -198,7 +204,7 @@ const UpdateVendor = () => {
       <View style={styles.segment}>
         <Button
           size="sm"
-           colorScheme="secondary"
+          colorScheme="secondary"
           title="Back"
           onPress={handleBack}
         />
@@ -206,16 +212,16 @@ const UpdateVendor = () => {
 
       <View style={styles.space}></View>
 
-    <View style={styles.segment}>
-      <Button
-      marginBottom = {20}
-      color={'green'}
-        title="Update"
-        onPress={() => {
-          updatedUserData.forEach((item) => handleUpdate(item));
-        }}
-      />
-    </View>
+      <View style={styles.segment}>
+        <Button
+          marginBottom={20}
+          color={'green'}
+          title="Update"
+          onPress={() => {
+            updatedUserData.forEach((item) => handleUpdate(item));
+          }}
+        />
+      </View>
     </View>
   );
 
@@ -236,15 +242,15 @@ const UpdateVendor = () => {
 export default () => {
   return (
     <NativeBaseProvider>
-    <UpdateVendor />
+      <UpdateVendor />
     </NativeBaseProvider>
   )
 }
 
 const styles = StyleSheet.create({
-  container:{
-    paddingTop:5,
-    paddingBottom:5
+  container: {
+    paddingTop: 5,
+    paddingBottom: 5
   },
 
   itemContainer: {
@@ -253,8 +259,8 @@ const styles = StyleSheet.create({
 
   footer: {
     marginTop: 5,
-    height:40,
-    width:300,
+    height: 40,
+    width: 300,
   },
 
   headerText: {
@@ -262,9 +268,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    backgroundColor:'blue',
-    paddingTop:4,
-    paddingBottom:5
+    backgroundColor: 'blue',
+    paddingTop: 4,
+    paddingBottom: 5
   },
 
   segment: {
@@ -279,7 +285,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 20,
   },
-  
+
   space: {
     width: 40, // Adjust the width as per your requirement
   },

@@ -115,6 +115,8 @@ const VendorRegisterWorker = () => {
 
         // Insert user data into Firebase Realtime Database
         const usersRef = ref(database, 'TSA/Worker');
+        //setref
+        
         push(usersRef, userObj)
           .then(() => {
             alert('Worker registered successfully!');

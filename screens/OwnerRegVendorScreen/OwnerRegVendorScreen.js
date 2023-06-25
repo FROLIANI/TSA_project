@@ -92,6 +92,8 @@ const HttRegisterVendor = () => {
           address,
           vendorType,
           registerdate,
+          password,
+          cpassword,
           role: "Vendor",
         };
 

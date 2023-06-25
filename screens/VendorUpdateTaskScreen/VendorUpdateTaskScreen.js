@@ -1,21 +1,16 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { View,  Button, FlatList, StyleSheet, Text } from 'react-native';
 import { getDatabase, ref, onValue, update } from 'firebase/database';
 import { Input, Stack, NativeBaseProvider, TextArea } from 'native-base'
+import { useNavigation } from '@react-navigation/native';
 
 const database = getDatabase();
-
-const handleBack = () => {
-  // Handle the back button press here
-  console.log('Back button pressed');
-};
-
 
 const UpdateUser = () => {
   const [userData, setUserData] = useState([]);
   const [updatedUserData, setUpdatedUserData] = useState([]);
+  const navigation = useNavigation();
+
 
   useEffect(() => {
     const fetchData = () => {
@@ -59,6 +54,12 @@ const UpdateUser = () => {
       .catch((error) => {
         alert('Error updating Task: ', error);
       });
+  };
+
+  const handleBack = () => {
+    // Handle the back button press here
+    navigation.navigate('VendorHomeScreen')
+    
   };
 
   const renderItem = ({ item }) => (

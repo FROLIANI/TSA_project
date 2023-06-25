@@ -20,24 +20,7 @@ const VendorList = () => {
             setUsers(updatedUsers);
         });
 
-        const handleDataChange = (snapshot) => {
-            const dataValue = snapshot.val();
-            setActivated(dataValue?.isActive || false);
-        };
-
-        if (selectedUser && selectedUser.id) {
-            const dataRef = ref(database, `TSA/Vendor/${selectedUser.id}`);
-            const dataListener = onValue(dataRef, handleDataChange);
-
-            return () => {
-                remove(usersRef);
-                remove(dataRef);
-                unsubscribe();
-            };
-        }
-
         return () => {
-            remove(usersRef);
             unsubscribe();
         };
     }, [selectedUser]);
@@ -47,7 +30,6 @@ const VendorList = () => {
 
         const userRef = ref(database, `TSA/Vendor/${userId}`);
         try {
-            // Update the 'isActive' property of the data item in Firebase Realtime Database
             const dataRef = ref(database, 'TSA/Vendor/${userId}');
             await set(dataRef, { isActive: newActivationValue });
             console.log('Activation done');
@@ -61,7 +43,6 @@ const VendorList = () => {
     //Handle update
     const handleUpdate = (user) => {
         setSelectedUser(user);
-        // Perform the update logic here
         navigation.navigate("UpdateVendorScreen")
     };
 
@@ -148,7 +129,7 @@ const VendorList = () => {
                                                 width={12}
                                                 marginBottom={4}
                                                 height={6}
-                                                onPress={() => handleUpdate(item)}
+                                                onPress={() => handleUpdate(item.id)}
                                             >
                                                 update
                                             </Button>

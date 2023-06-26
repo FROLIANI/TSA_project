@@ -4,7 +4,7 @@ import BottomOwner from '../../components/BottomTabs/BottomOwner'
 import BottomUser from '../../components/BottomTabs/BottomUser'
 import BottomVendor from '../../components/BottomTabs/BottomVendor'
 import ForgotTab from '../../components/BottomTabs/ForgotTab'
-import FirstScreenopen  from '../../Screens/FirstScreen/FirstScreenopen'
+import FirstScreenopen from '../../Screens/FirstScreen/FirstScreenopen'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
@@ -16,7 +16,7 @@ export default function AuthNav() {
         initialRouteName="FirstScreenopen"
       >
 
-<Stack.Screen name="FirstScreenopen" component={FirstScreenopen}
+        <Stack.Screen name="FirstScreenopen" component={FirstScreenopen}
           options={{
             headerShown: false,
             headerStyle: { backgroundColor: 'blue' },

@@ -1,142 +1,274 @@
-import React, { useEffect, useState } from 'react';
-import { Box, FlatList, Heading, HStack, VStack, Text, Spacer, Button, NativeBaseProvider } from "native-base";
-import { getDatabase, ref, onValue, remove } from 'firebase/database';
-import { View } from 'react-native'
+import React, { useState, useEffect } from 'react';
+import { View, Button, FlatList, StyleSheet, Text, ScrollView } from 'react-native';
+import { getDatabase, ref, onValue, update } from 'firebase/database';
+import { Input, Stack, NativeBaseProvider } from 'native-base'
 import { useNavigation } from '@react-navigation/native';
+
 
 const database = getDatabase();
 
-const PreviewUser = () => {
 
-  //Handle navigation
-  const navigation = useNavigation();
-
-  const [users, setUsers] = useState([]);
+const UpdateVendor = () => {
+  const [userData, setUserData] = useState([]);
+  const [updatedUserData, setUpdatedUserData] = useState([]);
 
   useEffect(() => {
-    const usersRef = ref(database, 'TSA/Worker');
-    const unsubscribe = onValue(usersRef, (snapshot) => {
-      const data = snapshot.val();
-      const updatedUsers = data ? Object.entries(data).map(([id, user]) => ({ id, ...user })) : [];
-      setUsers(updatedUsers);
-    });
-
-    return () => {
-      remove(usersRef);
-      unsubscribe();
+    const fetchData = () => {
+      const dataRef = ref(database, `TSA/Worker`);
+      onValue(dataRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const userArray = Object.entries(data).map(([key, value]) => ({
+            id: key,
+            ...value,
+          }));
+          setUserData(userArray);
+          setUpdatedUserData(userArray);
+        } else {
+          setUserData([]);
+          setUpdatedUserData([]);
+        }
+      });
     };
+
+    fetchData();
   }, []);
 
-  //Handle update
-  const handleUpdate = (userId) => {
-    const selectedUser = users.find(user => user.id === userId);
-    navigation.navigate("updateUserScreen", { user: selectedUser });
-  };
+  const navigation = useNavigation();
+  const handleBack = () => {
+    navigation.navigate('VendorHomeScreen')
+  }
 
-  //Handle delete
-  const handleDelete = async (userId) => {
-    try {
-      const userRef = ref(database, `TSA/Worker/${userId}`);
-      await remove(userRef);
-      alert('User deleted successfully');
-    } catch (error) {
-      alert('Error deleting user:', error);
+  const handleUpdate = (userId) => {
+    const updatedUser = updatedUserData.find((item) => item.id === userId);
+    if (updatedUser) {
+      const updatedData = {
+        name: updatedUser.name,
+        email: updatedUser.email,
+        vendorType: updatedUser.vendorType,
+        registerdate: updatedUser.registerdate,
+        dob: updatedUser.dob,
+        gender: updatedUser.gender,
+        phone: updatedUser.phone,
+      };
+
+      update(ref(database, `TSA/Worker/${userId}`), updatedData)
+        .then(() => {
+          alert('Worker successfully updated');
+        })
+        .catch((error) => {
+          alert('Error updating Worker: ', error);
+        });
     }
   };
 
-  //Navigate to Vendor Home 
-  const handleBack = () => {
-    navigation.navigate('VendorHomeScreen')
-  };
+  const renderItem = ({ item }) => (
+    <Stack space={4} w="80%" maxW="300px" mx="auto">
 
-  return <Box>
-    <Text style={{
-      fontSize: 20,
-      fontWeight: 'bold',
-      textAlign: "center",
-      marginVertical: 10,
-      backgroundColor: 'blue',
-      paddingTop: 10,
-      paddingBottom: 10
-    }}>
-      Vendor Preview User
-    </Text>
-    <Heading bg="teal.200" fontSize="md" p="5" pb="3">
-      <HStack space={[20, 1]} justifyContent="space-between">
-        <VStack><Text>Name</Text></VStack>
-        <VStack><Text>Email</Text></VStack>
-        <VStack><Text pl="6">Action</Text></VStack>
+      <Input
+        variant="outline"
+        value={item.name}
+        placeholder='name'
+        onChangeText={(text) => {
+          setUpdatedUserData((prevData) => {
+            const updatedItem = { ...item, name: text };
+            const newData = prevData.map((data) =>
+              data.id === item.id ? updatedItem : data
+            );
+            return newData;
+          });
+        }}
+      />
+      <Input
+        variant="outline"
+        value={item.dob}
+        placeholder='dob'
+        onChangeText={(text) => {
+          setUpdatedUserData((prevData) => {
+            const updatedItem = { ...item, dob: text };
+            const newData = prevData.map((data) =>
+              data.id === item.id ? updatedItem : data
+            );
+            return newData;
+          });
+        }}
+      />
 
-      </HStack>
-    </Heading>
+      <Input
+        variant="outline"
+        value={item.gender}
+        placeholder='gender'
+        onChangeText={(text) => {
+          setUpdatedUserData((prevData) => {
+            const updatedItem = { ...item, gender: text };
+            const newData = prevData.map((data) =>
+              data.id === item.id ? updatedItem : data
+            );
+            return newData;
+          });
+        }}
+      />
 
-    <FlatList
-      data={users}
-      renderItem={({
-        item
-      }) => <Box borderBottomWidth="1" _dark={{
-        borderColor: "muted.50"
-      }} borderColor="muted.800"
-        pl={["0", "4"]}
-        pr={["0", "5"]} py="2"
-      >
-          <HStack p="3"
-            space={[1, 1]}
-            justifyContent="space-between"
-          >
-            <VStack>
-              <Text _dark={{
-                color: "warmGray.50"
-              }} color="coolGray.800" bold>
-                {item.name}
-              </Text>
-            </VStack>
-            <Spacer />
+      <Input
+        variant="outline"
+        value={item.email}
+        placeholder='Email'
+        onChangeText={(text) => {
+          setUpdatedUserData((prevData) => {
+            const updatedItem = { ...item, email: text };
+            const newData = prevData.map((data) =>
+              data.id === item.id ? updatedItem : data
+            );
+            return newData;
+          });
+        }}
+      />
 
-            <VStack>
-              <Text _dark={{
-                color: "warmGray.50"
-              }} color="coolGray.800" bold>
-                {item.email}
-              </Text>
-            </VStack>
-            <Spacer />
+      <Input
+        variant="outline"
+        value={item.phone}
+        placeholder='phone'
+        onChangeText={(text) => {
+          setUpdatedUserData((prevData) => {
+            const updatedItem = { ...item, phone: text };
+            const newData = prevData.map((data) =>
+              data.id === item.id ? updatedItem : data
+            );
+            return newData;
+          });
+        }}
+      />
 
-            <VStack>
-              <Button width={12} height={6} onPress={() => handleUpdate(item.id)}> update </Button>
-            </VStack>
+      <Input
+        variant="outline"
+        value={item.vendorType}
+        placeholder='Vendor Type'
+        onChangeText={(text) => {
+          setUpdatedUserData((prevData) => {
+            const updatedItem = { ...item, vendorType: text };
+            const newData = prevData.map((data) =>
+              data.id === item.id ? updatedItem : data
+            );
+            return newData;
+          });
+        }}
+      />
 
-            <VStack>
-              <Button width={12} height={6} backgroundColor={'red.700'} onPress={() => handleDelete(item.id)}> Delete </Button>
-            </VStack>
-          </HStack>
-        </Box>
-      }
+      <Input
+        variant="outline"
+        value={item.registerdate}
+        placeholder='Registerd Date'
+        onChangeText={(text) => {
+          setUpdatedUserData((prevData) => {
+            const updatedItem = { ...item, registerdate: text };
+            const newData = prevData.map((data) =>
+              data.id === item.id ? updatedItem : data
+            );
+            return newData;
+          });
+        }}
+      />
 
-      //Provide a unique key for each item
-      keyExtractor={item => item.id.toString()} />
-    <View style={{ marginBottom: 20 }}>
-      <Box p={3} >
+    </Stack>
+  );
+
+  const renderFooter = () => (
+    <View style={styles.buttonContainer}>
+
+      <View style={styles.segment}>
         <Button
-          width={'80%'}
-          height={30}
-          alignSelf={'center'}
-          padding={5}
-          marginBottom={20}
+          size="sm"
+          colorScheme="secondary"
+          title="Back"
           onPress={handleBack}
-        >
-          BACK
-        </Button>
-      </Box>
-    </View >
+        />
+      </View>
 
-  </Box>;
-};
+      <View style={styles.space}></View>
+
+      <View style={styles.segment}>
+        <Button
+          marginBottom={20}
+          color={'green'}
+          title="Update"
+          onPress={() => {
+            updatedUserData.forEach((item) => handleUpdate(item));
+          }}
+        />
+      </View>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.headerText}>Update Worker Details</Text>
+
+      <ScrollView style={styles.scrollView}>
+        <FlatList
+          data={updatedUserData}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          ListFooterComponent={renderFooter}
+          style={styles.list}
+        />
+      </ScrollView>
+    </View>
+  );
+}
 
 export default () => {
   return (
     <NativeBaseProvider>
-      <PreviewUser />
+      <UpdateVendor />
     </NativeBaseProvider>
-  );
-};
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: 5,
+    paddingBottom: 5
+  },
+
+  itemContainer: {
+    marginBottom: 10,
+  },
+
+  footer: {
+    marginTop: 5,
+    height: 40,
+    width: 300,
+  },
+
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    backgroundColor: 'blue',
+    paddingTop: 4,
+    paddingBottom: 5
+  },
+
+  segment: {
+    width: 100,
+    height: 30,
+    backgroundColor: 'black',
+  },
+
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+
+  space: {
+    width: 40, // Adjust the width as per your requirement
+  },
+
+  scrollView: {
+    flex: 1,
+    marginBottom: 20,
+  },
+});

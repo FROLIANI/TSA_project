@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Input, Icon, Stack, Pressable, Button, NativeBaseProvider } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
-import { StyleSheet, View, Text, ScrollView,Picker } from "react-native";
+import { StyleSheet, View, Text, ScrollView, Picker } from "react-native";
 import { getDatabase, ref, push, set } from 'firebase/database';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
@@ -51,7 +51,7 @@ const VendorRegisterWorker = () => {
 
     if (dob.trim() === '') {
       errors.dob = '* Date Of Birth is required';
-    }else if (!isValidDate(dob)) {
+    } else if (!isValidDate(dob)) {
       errors.dob = "Invalid Dob Entered";
     }
 
@@ -70,7 +70,7 @@ const VendorRegisterWorker = () => {
 
     if (registerdate.trim() === '') {
       errors.registerdate = '*Register Date is required';
-    }else if (!isValidDate(registerdate)) {
+    } else if (!isValidDate(registerdate)) {
       errors.registerdate = "Invalid Date Registered";
     }
 
@@ -114,10 +114,9 @@ const VendorRegisterWorker = () => {
         };
 
         // Insert user data into Firebase Realtime Database
-        const usersRef = ref(database, 'TSA/Worker');
+        const usersRef = ref(database, `TSA/Worker/${uid}`);
         //setref
-        
-        push(usersRef, userObj)
+        set(usersRef, userObj)
           .then(() => {
             alert('Worker registered successfully!');
           })
@@ -335,7 +334,7 @@ const styles = StyleSheet.create({
     width: '100%',
     textAlign: 'center',
     paddingTop: 20,
-    paddingBottom:20,
+    paddingBottom: 20,
     shapeMargin: 'corner',
     fontSize: 24
 

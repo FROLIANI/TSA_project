@@ -98,8 +98,8 @@ const HttRegisterVendor = () => {
         };
 
         // Insert user data into Firebase Realtime Database
-        const usersRef = ref(database, 'TSA/Vendor');
-        push(usersRef, userObj)
+        const usersRef = ref(database, `TSA/Vendor/${uid}`);
+        set(usersRef, userObj)
           .then(() => {
             alert('Vendor registered successfully!');
           })

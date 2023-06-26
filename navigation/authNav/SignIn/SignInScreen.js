@@ -14,12 +14,11 @@ import {
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
-import { Image, Text, } from "react-native";
+import { Image, Text } from "react-native";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { UserContext } from "../../../Providers/UserContext";
 import { useNavigation } from "@react-navigation/native";
 
-// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBadbWypGwvbspbZnETnhRuyGa4Otc4M_M",
   authDomain: "tsa123-76b2e.firebaseapp.com",
@@ -90,7 +89,7 @@ const SignIn = () => {
       as={<Ionicons name={name} />}
       size={5}
       ml={2}
-      color='blue.500' // Set the color to blue
+      color="blue.500" // Set the color to blue
     />
   );
 
@@ -123,27 +122,29 @@ const SignIn = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log("User Credentials ", user);
-        // Fetch the user's role from the database
-        const databaseRef = ref(
-          getDatabase(app),
-          `TSA/Vendor/${user.uid}/role`
-        );
+
+        // Fetch the vendors collection from the database
+        const databaseRef = ref(getDatabase(app), "TSA/Vendor");
         onValue(
           databaseRef,
           (snapshot) => {
-            const role = snapshot.val();
-            console.log("Snapshot Value", role);
-            // console.log("Role Fetched ", userRole);
-            // Check if the user is an admin
-            if (userRole === "Admin") {
-              navigation.navigate('BottomOwner')
-            }
-           else if (userRole === "Vendor") {
-              navigation.navigate('BottomVendor')
-            }
-           else if (userRole === "Worker") {
-              navigation.navigate('BottomUser')
-            } 
+
+            // Iterate over each vendor document in the snapshot
+            snapshot.forEach((vendorSnapshot) => {
+              const vendor = vendorSnapshot.val();
+              const role = vendor.role;
+              console.log("Snapshot Value", role);
+
+              if (user.uid === vendorSnapshot.key) {
+                if (role === "Admin") {
+                  navigation.navigate("BottomOwner");
+                } else if (role === "Vendor") {
+                  navigation.navigate("BottomVendor");
+                } else if (role === "Worker") {
+                  navigation.navigate("BottomUser");
+                }
+              }
+            });
           },
           (error) => {
             console.log("error", error);
@@ -156,7 +157,7 @@ const SignIn = () => {
   };
 
   return (
-    <Center w='100%'>
+    <Center w="100%">
       <Box safeArea p='2' w='90%' maxW='290' py='8'>
         <Box
           bg={{
@@ -280,11 +281,9 @@ const SignIn = () => {
 export default function SignInScreen() {
   return (
     <NativeBaseProvider>
-      <Center flex={1} px='3'>
+      <Center flex={1} px="3">
         <SignIn />
       </Center>
     </NativeBaseProvider>
   );
 }
-
-

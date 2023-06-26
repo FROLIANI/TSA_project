@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, View, StyleSheet, Button, SafeAreaView, Image } from 'react-native';
 import { Menu, HamburgerIcon, Box, Pressable, NativeBaseProvider } from "native-base";
 import { useNavigation } from '@react-navigation/native';
-import { getAuth, signOut } from 'firebase/auth';
+import { getAuth, signOut,onAuthStateChanged  } from 'firebase/auth';
 
 
 function OwnerHomeScreen() {
@@ -79,9 +79,9 @@ const MyButton = () => {
       <Separator />
       <View>
         <Button
-          title="REQUEST HISTORY"
+          title="REQUEST VIEW"
           color="#a855f7"
-          onPress={() => { navigation.navigate('UserSendRequestScreen') }}
+          onPress={() => { navigation.navigate('UserViewRequestScreen') }}
         />
       </View>
     </SafeAreaView>

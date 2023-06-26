@@ -30,7 +30,7 @@ const PreviewUser = () => {
   // Handle update
   const handleUpdate = (userId) => {
     const selectedUser = users.find(user => user.id === userId);
-    navigation.navigate("UpdateUserForm", { user: selectedUser });
+    navigation.navigate("updateUserScreen", { user: selectedUser });
   };
 
   // Handle delete

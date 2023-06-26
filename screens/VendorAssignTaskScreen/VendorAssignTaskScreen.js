@@ -148,7 +148,7 @@ const VendorAssignTask = () => {
       ref={timeInputRef}
     />
 
-    <Input variant="underlined" placeholder="Task Description(pdf doc)"
+    <Input variant="underlined" placeholder="Task Description"
       value={description} onChangeText={(text) => setDescription(text)}
       ref={descriptionInputRef}
     />

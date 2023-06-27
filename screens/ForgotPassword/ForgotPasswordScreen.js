@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-
+import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik';
-import { sendPasswordResetEmail,passwordResetSchema } from 'firebase/auth';
-
-     
+import { sendPasswordResetEmail, passwordResetSchema } from 'firebase/auth';
 import { Colors } from '../../config';
 import { View, TextInput, Button, FormErrorMessage } from '../../components';
 
@@ -23,10 +20,9 @@ export const ForgotPasswordScreen = () => {
       })
       .catch(error => setErrorState(error.message));
   };
-  
+
   //Handle navigation
   const navigation = useNavigation();
-
 
   return (
     <View isSafe style={styles.container}>
@@ -76,7 +72,7 @@ export const ForgotPasswordScreen = () => {
         style={styles.borderlessButtonContainer}
         borderless
         title={'Go back to Login'}
-        onPress={() => navigation.navigate('SignIn')}    
+        onPress={() => navigation.navigate('SignIn')}
       />
     </View>
   );
@@ -88,15 +84,18 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingHorizontal: 12
   },
+
   innerContainer: {
     alignItems: 'center'
   },
+
   screenTitle: {
     fontSize: 32,
     fontWeight: '700',
     color: Colors.black,
     paddingTop: 20
   },
+
   button: {
     width: '100%',
     justifyContent: 'center',

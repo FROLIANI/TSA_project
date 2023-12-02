@@ -15,7 +15,7 @@ The diagram shows the flow of activities of the user in the application
 ![SIGN](https://github.com/FROLIANI/TSA_project/assets/84269100/07e7d51b-f4ff-4dac-81a5-cf194832c7c9)
 
     Forget password page for reset
-    ![homereset](https://github.com/FROLIANI/TSA_project/assets/84269100/feafd030-fc7c-4db8-9182-25df9647a1ca)
+![homereset](https://github.com/FROLIANI/TSA_project/assets/84269100/feafd030-fc7c-4db8-9182-25df9647a1ca)
 
             Login Telecom worker page after sign in credentials
 ![userhome](https://github.com/FROLIANI/TSA_project/assets/84269100/bfaca1e7-b104-4d58-8805-50a43f762d22)

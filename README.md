@@ -2,7 +2,7 @@
 
 This project is based on the Accessibility of the Telecom workers of the telecom vendors to perform their duties at the site
 The task is assigned by their vendor such as Tigo, Vodacom, Halotel, Airtel etc to their vendor. This app simplifies for them to get easily to the site by sending the request to the owner of Tower and getting approved.
-The app has three users, a Telecom Owner, a vendor and worker. The Telecom Owner control all activities that  are done by telecom vendors that order their workers to work on-site  like making equipment repairment, equipment installation  and checking performance of their devices
+The app has three users, a Telecom Owner, a vendor and worker. The Telecom Owner control all activities that  are done by telecom vendors that order their workers to work on-site  like making equipment repairment, equipment installation  and checking performance of their devices 
 
 # Flowchart  of Telecom Site Access Application (TSA).
 ![flowchart](https://github.com/FROLIANI/TSA_project/assets/84269100/2f9dc605-6c4d-46a1-abdd-1e44f9ed7065)
